@@ -1,6 +1,6 @@
 package com.example.jee_project.note.dto;
 
-public class GetNotesResponse {
+public class GetNoteResponse {
 
     private String title;
     private String content;

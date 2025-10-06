@@ -1,5 +1,6 @@
 package com.example.jee_project.note.entity;
 
+import com.example.jee_project.user.entity.User;
 import lombok.*;
 
 import java.io.Serializable;
@@ -18,4 +19,5 @@ public class NoteThread implements Serializable {
     private UUID id;
     private String title;
     private List<Note> notes;
+    private User user;
 }
