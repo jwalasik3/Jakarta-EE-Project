@@ -4,6 +4,9 @@ import com.example.jee_project.crypto.component.Pbkdf2PasswordHash;
 import com.example.jee_project.user.entity.User;
 import com.example.jee_project.user.repository.api.UserRepository;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -29,6 +32,10 @@ public class UserService {
     public UserService(UserRepository repository, Pbkdf2PasswordHash passwordHash) {
         this.repository = repository;
         this.passwordHash = passwordHash;
+    }
+
+    public List<User> findAll() {
+        return repository.findAll();
     }
 
     /**
@@ -69,5 +76,22 @@ public class UserService {
                 .map(user -> passwordHash.verify(password.toCharArray(), user.getPassword()))
                 .orElse(false);
     }
+
+    public void updateAvatar(UUID id, InputStream is) {
+        repository.find(id).ifPresent(user -> {
+            try {
+                if (is == null) {
+                    user.setAvatar(null);
+                    repository.update(user);
+                    return;
+                }
+                user.setAvatar(is.readAllBytes());
+                repository.update(user);
+            } catch (IOException ex) {
+                throw new IllegalStateException(ex);
+            }
+        });
+    }
+
 
 }

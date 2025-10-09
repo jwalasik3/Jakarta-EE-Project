@@ -158,7 +158,7 @@ public class DataStore {
      * @throws IllegalArgumentException if user with the same id does not exist
      */
     public synchronized void updateUser(User value) throws IllegalArgumentException {
-        if (users.removeIf(character -> character.getId().equals(value.getId()))) {
+        if (users.removeIf(user -> user.getId().equals(value.getId()))) {
             users.add(cloningUtility.clone(value));
         } else {
             throw new IllegalArgumentException("The user with id \"%s\" does not exist".formatted(value.getId()));

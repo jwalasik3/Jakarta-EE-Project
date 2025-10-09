@@ -14,6 +14,7 @@ import java.util.UUID;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @ToString
 @EqualsAndHashCode
+@Builder
 public class User implements Serializable {
 
     private UUID id;
@@ -24,7 +25,7 @@ public class User implements Serializable {
     private String name;
     private String surname;
     private LocalDate birthday;
-    private UserRole role;
+    private List<UserRole> role;
     private List<Note> notes;
     @ToString.Exclude
     private byte[] avatar;
