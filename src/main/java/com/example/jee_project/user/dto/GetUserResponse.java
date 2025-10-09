@@ -1,12 +1,22 @@
 package com.example.jee_project.user.dto;
 
-import com.example.jee_project.note.entity.Note;
-import com.example.jee_project.note.entity.NoteThread;
+import lombok.*;
 
-import java.util.List;
+import java.time.LocalDate;
+import java.util.UUID;
 
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@ToString
+@EqualsAndHashCode
 public class GetUserResponse {
 
-    private String login;
-    private List<Note> notes;
+    private UUID id;
+    private String name;
+    private String surname;
+    private String email;
+    private LocalDate birthday;
 }
