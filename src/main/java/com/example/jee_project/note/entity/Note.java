@@ -19,6 +19,8 @@ public class Note implements Serializable {
     private UUID id;
     private String title;
     private String content;
+    @EqualsAndHashCode.Exclude
     private User user;
+    @EqualsAndHashCode.Exclude
     private NoteThread noteThread;
 }

@@ -80,11 +80,11 @@ public class ApiServlet extends HttpServlet {
 
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (request.getMethod().equals("PATCH")) {
-            doPatch(request, response);
-        } else {
-            super.service(request, response);
-        }
+//        if (request.getMethod().equals("PATCH")) {
+//            doPatch(request, response);
+//        } else {
+//            super.service(request, response);
+//        }
     }
 
     @Override

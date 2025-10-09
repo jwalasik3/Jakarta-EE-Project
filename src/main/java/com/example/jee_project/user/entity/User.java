@@ -1,7 +1,6 @@
 package com.example.jee_project.user.entity;
 
 import com.example.jee_project.note.entity.Note;
-import com.example.jee_project.note.entity.NoteThread;
 import lombok.*;
 
 import java.io.Serializable;
@@ -25,7 +24,7 @@ public class User implements Serializable {
     private String name;
     private String surname;
     private LocalDate birthday;
-    private List<String> role;
+    private UserRole role;
     private List<Note> notes;
     @ToString.Exclude
     private byte[] avatar;

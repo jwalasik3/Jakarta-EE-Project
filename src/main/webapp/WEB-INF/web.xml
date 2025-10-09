@@ -7,6 +7,6 @@
 
     <listener>
         <listener-class>com.example.jee_project.configuration.listener.CreateDataSource</listener-class>
-        <listener-class>com.example.jee_project.configuration.listener.CreateControllers</listener-class>
+<!--        <listener-class>com.example.jee_project.configuration.listener.CreateControllers</listener-class>-->
     </listener>
 </web-app>
