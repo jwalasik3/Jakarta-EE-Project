@@ -5,6 +5,11 @@
          version="6.0"
          metadata-complete="false">
 
+    <context-param>
+        <param-name>AVATAR_STORE</param-name>
+        <param-value>/home/student/IdeaProjects/193650/externalDataSource/</param-value>
+    </context-param>
+    
     <listener>
         <listener-class>com.example.jee_project.configuration.listener.CreateDataSource</listener-class>
     </listener>

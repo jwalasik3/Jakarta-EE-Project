@@ -40,7 +40,6 @@ public class InitializedData implements ServletContextListener {
                 .email("admin@simple-notes.example.com")
                 .password("adminadmin")
                 .role(List.of(UserRole.ADMIN, UserRole.USER))
-                .avatar(getResourceAsByteArray("/configuration/admin.png"))
                 .build();
 
         User kevin = User.builder()
@@ -52,7 +51,6 @@ public class InitializedData implements ServletContextListener {
                 .email("kevin@example.com")
                 .password("useruser")
                 .role(List.of(UserRole.USER))
-                .avatar(getResourceAsByteArray("/configuration/kevin.png"))
                 .build();
 
         User alice = User.builder()
@@ -64,7 +62,6 @@ public class InitializedData implements ServletContextListener {
                 .email("alice@example.com")
                 .password("useruser")
                 .role(List.of(UserRole.USER))
-                .avatar(getResourceAsByteArray("/configuration/alice.png"))
                 .build();
 
         User student = User.builder()
@@ -76,7 +73,6 @@ public class InitializedData implements ServletContextListener {
                 .email("student@example.com")
                 .password("piwopiwo")
                 .role(List.of(UserRole.USER))
-//                .avatar(getResourceAsByteArray("/configuration/student.png"))
                 .build();
 
         userService.create(admin);

@@ -4,8 +4,8 @@ import com.example.jee_project.crypto.component.Pbkdf2PasswordHash;
 import com.example.jee_project.user.entity.User;
 import com.example.jee_project.user.repository.api.UserRepository;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -25,13 +25,16 @@ public class UserService {
      */
     private final Pbkdf2PasswordHash passwordHash;
 
+    private final String avatarStore;
+
     /**
      * @param repository   repository for character entity
      * @param passwordHash hash mechanism used for storing users' passwords
      */
-    public UserService(UserRepository repository, Pbkdf2PasswordHash passwordHash) {
+    public UserService(UserRepository repository, Pbkdf2PasswordHash passwordHash, String avatarStore) {
         this.repository = repository;
         this.passwordHash = passwordHash;
+        this.avatarStore = avatarStore;
     }
 
     public List<User> findAll() {
@@ -80,13 +83,22 @@ public class UserService {
     public void updateAvatar(UUID id, InputStream is) {
         repository.find(id).ifPresent(user -> {
             try {
+                File avatar = new File(avatarStore + user.getId() + ".png");
                 if (is == null) {
-                    user.setAvatar(null);
-                    repository.update(user);
+                    if (avatar.exists()) {
+                        avatar.delete();
+                    }
                     return;
                 }
-                user.setAvatar(is.readAllBytes());
-                repository.update(user);
+                if (avatar.exists()) {
+                    avatar.delete();
+                }
+                if (avatar.createNewFile()) {
+                    try (OutputStream out = new FileOutputStream(avatar)) {
+                        out.write(is.readAllBytes());
+                    }
+                }
+
             } catch (IOException ex) {
                 throw new IllegalStateException(ex);
             }
@@ -94,4 +106,13 @@ public class UserService {
     }
 
 
+    public byte[] findUserAvatar(UUID id) throws IOException {
+
+        File avatar = new File(avatarStore + id + ".png");
+        if (avatar.exists()) {
+            return Files.readAllBytes(avatar.toPath());
+        } else {
+            return null;
+        }
+    }
 }

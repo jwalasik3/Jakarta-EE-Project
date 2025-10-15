@@ -9,6 +9,7 @@ import com.example.jee_project.user.dto.GetUsersResponse;
 import com.example.jee_project.user.entity.User;
 import com.example.jee_project.user.service.UserService;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
 
@@ -50,10 +51,23 @@ public class UserSimpleController implements UserController {
     @Override
     public byte[] getUserAvatar(UUID id) {
 
-        return service.find(id)
-                .map(User::getAvatar)
-                .orElseThrow(NotFoundException::new);
+        var user = service.find(id);
 
+        if (user.isPresent()) {
+            try {
+                var result = service.findUserAvatar(user.get().getId());
+
+                if (result == null) {
+
+                    throw new NotFoundException();
+                } else {
+                    return result;
+                }
+            } catch (IOException e) {
+                throw new NotFoundException();
+            }
+        }
+        throw new NotFoundException();
     }
 
     @Override

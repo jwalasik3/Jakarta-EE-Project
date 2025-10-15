@@ -1,0 +1,40 @@
+# Get all users.
+
+GET http://localhost:9080/simple-notes/api/users
+
+###
+
+# Get single user.
+
+GET http://localhost:9080/simple-notes/api/users/c4804e0f-769e-4ab9-9ebe-0578fb4f00a6
+
+###
+
+# Get single user portrait.
+
+GET http://localhost:9080/simple-notes/api/users/c4804e0f-769e-4ab9-9ebe-0578fb4f00a6/avatar
+
+###
+
+# Get single character portrait. Not existing, created later.
+
+GET http://localhost:9080/simple-notes/api/users/c4804e0f-769e-4ab9-9ebe-0578fb4f00a4/avatar
+
+###
+
+# Create character portrait.
+
+PUT http://localhost:9080/simple-notes/api/users/c4804e0f-769e-4ab9-9ebe-0578fb4f00a6/avatar
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="avatar"; filename="student.png'
+
+< src/main/resources/configuration/kevin.png
+--boundary--
+
+###
+
+# Delete user avatar
+
+DELETE http://localhost:9080/simple-notes/api/users/c4804e0f-769e-4ab9-9ebe-0578fb4f00a6/avatar
