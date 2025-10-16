@@ -9,7 +9,6 @@ import com.example.jee_project.user.dto.GetUsersResponse;
 import com.example.jee_project.user.entity.User;
 import com.example.jee_project.user.service.UserService;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
 
@@ -39,6 +38,7 @@ public class UserSimpleController implements UserController {
 
     @Override
     public void createUser(User user) {
+
         try {
 
             service.create(user);
@@ -55,15 +55,14 @@ public class UserSimpleController implements UserController {
 
         if (user.isPresent()) {
             try {
+
                 var result = service.findUserAvatar(user.get().getId());
-
                 if (result == null) {
-
                     throw new NotFoundException();
                 } else {
                     return result;
                 }
-            } catch (IOException e) {
+            } catch (IllegalStateException e) {
                 throw new NotFoundException();
             }
         }
@@ -72,6 +71,7 @@ public class UserSimpleController implements UserController {
 
     @Override
     public void putUserAvatar(UUID id, InputStream portrait) {
+
         service.find(id).ifPresentOrElse(
                 entity -> service.updateAvatar(id, portrait),
                 () -> {
@@ -82,8 +82,9 @@ public class UserSimpleController implements UserController {
 
     @Override
     public void deleteAvatar(UUID id) {
+
         service.find(id).ifPresentOrElse(
-                entity -> service.updateAvatar(id, null),
+                entity -> service.deleteAvatar(id),
                 () -> {
                     throw new NotFoundException();
                 }

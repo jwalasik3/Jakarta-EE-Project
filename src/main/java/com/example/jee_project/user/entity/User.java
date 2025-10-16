@@ -27,6 +27,4 @@ public class User implements Serializable {
     private LocalDate birthday;
     private List<UserRole> role;
     private List<Note> notes;
-    @ToString.Exclude
-    private byte[] avatar;
 }
