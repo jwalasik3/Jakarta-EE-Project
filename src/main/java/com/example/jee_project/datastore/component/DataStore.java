@@ -2,8 +2,11 @@ package com.example.jee_project.datastore.component;
 
 import com.example.jee_project.note.entity.Note;
 import com.example.jee_project.note.entity.NoteThread;
-import com.example.jee_project.user.entity.User;
 import com.example.jee_project.serialization.component.CloningUtility;
+import com.example.jee_project.user.entity.User;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import lombok.NoArgsConstructor;
 import lombok.extern.java.Log;
 
 import java.util.HashSet;
@@ -20,6 +23,8 @@ import java.util.stream.Collectors;
  * usage.
  */
 @Log
+@ApplicationScoped
+@NoArgsConstructor(force = true)
 public class DataStore {
 
     /**
@@ -45,7 +50,9 @@ public class DataStore {
     /**
      * @param cloningUtility component used for creating deep copies
      */
+    @Inject
     public DataStore(CloningUtility cloningUtility) {
+
         this.cloningUtility = cloningUtility;
     }
 
@@ -55,6 +62,7 @@ public class DataStore {
      * @return list (can be empty) of all professions
      */
     public synchronized List<NoteThread> findAllNoteThreads() {
+
         return noteThreads.stream()
                 .map(cloningUtility::clone)
                 .collect(Collectors.toList());
@@ -67,6 +75,7 @@ public class DataStore {
      * @throws IllegalArgumentException if profession with provided id already exists
      */
     public synchronized void createNoteThread(NoteThread value) throws IllegalArgumentException {
+
         if (noteThreads.stream().anyMatch(profession -> profession.getId().equals(value.getId()))) {
             throw new IllegalArgumentException("The profession id \"%s\" is not unique".formatted(value.getId()));
         }
@@ -79,6 +88,7 @@ public class DataStore {
      * @return list (can be empty) of all characters
      */
     public synchronized List<Note> findAllNotes() {
+
         return notes.stream()
                 .map(cloningUtility::clone)
                 .collect(Collectors.toList());
@@ -92,6 +102,7 @@ public class DataStore {
      *                                  {@link NoteThread} with provided uuid does not exist
      */
     public synchronized void createNote(Note value) throws IllegalArgumentException {
+
         if (notes.stream().anyMatch(note -> note.getId().equals(value.getId()))) {
             throw new IllegalArgumentException("The character id \"%s\" is not unique".formatted(value.getId()));
         }
@@ -107,6 +118,7 @@ public class DataStore {
      *                                  {@link NoteThread} with provided uuid does not exist
      */
     public synchronized void updateNote(Note value) throws IllegalArgumentException {
+
         Note entity = cloneWithRelationships(value);
         if (notes.removeIf(character -> character.getId().equals(value.getId()))) {
             notes.add(entity);
@@ -122,6 +134,7 @@ public class DataStore {
      * @throws IllegalArgumentException if character with provided id does not exist
      */
     public synchronized void deleteNote(UUID id) throws IllegalArgumentException {
+
         if (!notes.removeIf(character -> character.getId().equals(id))) {
             throw new IllegalArgumentException("The character with id \"%s\" does not exist".formatted(id));
         }
@@ -133,6 +146,7 @@ public class DataStore {
      * @return list (can be empty) of all users
      */
     public synchronized List<User> findAllUsers() {
+
         return users.stream()
                 .map(cloningUtility::clone)
                 .collect(Collectors.toList());
@@ -145,6 +159,7 @@ public class DataStore {
      * @throws IllegalArgumentException if user with provided id already exists
      */
     public synchronized void createUser(User value) throws IllegalArgumentException {
+
         if (users.stream().anyMatch(character -> character.getId().equals(value.getId()))) {
             throw new IllegalArgumentException("The user id \"%s\" is not unique".formatted(value.getId()));
         }
@@ -158,6 +173,7 @@ public class DataStore {
      * @throws IllegalArgumentException if user with the same id does not exist
      */
     public synchronized void updateUser(User value) throws IllegalArgumentException {
+
         if (users.removeIf(user -> user.getId().equals(value.getId()))) {
             users.add(cloningUtility.clone(value));
         } else {
@@ -173,6 +189,7 @@ public class DataStore {
      * @throws IllegalArgumentException when {@link User} or {@link NoteThread} with provided uuid does not exist
      */
     private Note cloneWithRelationships(Note value) {
+
         Note entity = cloningUtility.clone(value);
 
         if (entity.getUser() != null) {

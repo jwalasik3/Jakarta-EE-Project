@@ -14,6 +14,7 @@ public class HttpRequestException extends RuntimeException {
      * @param responseCode HTTP response code
      */
     public HttpRequestException(int responseCode) {
+
         this.responseCode = responseCode;
     }
 
@@ -22,6 +23,7 @@ public class HttpRequestException extends RuntimeException {
      * @param responseCode HTTP response code
      */
     public HttpRequestException(String message, int responseCode) {
+
         super(message);
         this.responseCode = responseCode;
     }
@@ -32,6 +34,7 @@ public class HttpRequestException extends RuntimeException {
      * @param responseCode HTTP response code
      */
     public HttpRequestException(String message, Throwable cause, int responseCode) {
+
         super(message, cause);
         this.responseCode = responseCode;
     }
@@ -41,6 +44,7 @@ public class HttpRequestException extends RuntimeException {
      * @param responseCode HTTP response code
      */
     public HttpRequestException(Throwable cause, int responseCode) {
+
         super(cause);
         this.responseCode = responseCode;
     }
@@ -53,6 +57,7 @@ public class HttpRequestException extends RuntimeException {
      * @param responseCode       HTTP response code
      */
     public HttpRequestException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace, int responseCode) {
+
         super(message, cause, enableSuppression, writableStackTrace);
         this.responseCode = responseCode;
     }

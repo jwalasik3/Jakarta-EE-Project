@@ -3,6 +3,10 @@ package com.example.jee_project.user.service;
 import com.example.jee_project.crypto.component.Pbkdf2PasswordHash;
 import com.example.jee_project.user.entity.User;
 import com.example.jee_project.user.repository.api.UserRepository;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.servlet.ServletContext;
+import lombok.NoArgsConstructor;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,19 +20,22 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@ApplicationScoped
+@NoArgsConstructor(force = true)
 public class UserService {
 
-
     private final UserRepository repository;
-
     private final Pbkdf2PasswordHash passwordHash;
-
+    private final ServletContext context;
     private final String avatarStore;
 
-    public UserService(UserRepository repository, Pbkdf2PasswordHash passwordHash, String avatarStore) {
+    @Inject
+    public UserService(UserRepository repository, Pbkdf2PasswordHash passwordHash, ServletContext context) {
 
         this.repository = repository;
         this.passwordHash = passwordHash;
+        this.context = context;
+        String avatarStore = this.context.getInitParameter("AVATAR_STORE");
         this.avatarStore = avatarStore.endsWith(File.separator)
                 ? avatarStore
                 : avatarStore + File.separator;

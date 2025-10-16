@@ -1,5 +1,6 @@
 package com.example.jee_project.crypto.component;
 
+import jakarta.enterprise.context.Dependent;
 import lombok.SneakyThrows;
 
 import javax.crypto.SecretKeyFactory;
@@ -13,6 +14,7 @@ import java.util.Base64;
  * Components responsible for hashing password. This implementation uses Password-Based Key Derivation Function 2
  * (PBKDF2) with SHA256 hash algorithm used in Hash-based Message Authentication Code (HMAC).
  */
+@Dependent
 public class Pbkdf2PasswordHash {
 
     /**
@@ -41,6 +43,7 @@ public class Pbkdf2PasswordHash {
      */
     @SneakyThrows
     public String generate(char[] password) {
+
         byte[] salt = generateSalt();
         KeySpec spec = new PBEKeySpec(password, salt, ITERATIONS, HASH_LENGTH * 8);
         SecretKeyFactory factory = SecretKeyFactory.getInstance(ALGORITHM);
@@ -62,6 +65,7 @@ public class Pbkdf2PasswordHash {
      */
     @SneakyThrows
     public boolean verify(char[] password, String hashedPassword) {
+
         byte[] saltPlusHash = Base64.getDecoder().decode(hashedPassword);
         byte[] salt = new byte[SALT_LENGTH];
         byte[] hash = new byte[HASH_LENGTH];
@@ -82,6 +86,7 @@ public class Pbkdf2PasswordHash {
      * @return random salt
      */
     private byte[] generateSalt() {
+
         SecureRandom random = new SecureRandom();
         byte[] salt = new byte[SALT_LENGTH];
         random.nextBytes(salt);

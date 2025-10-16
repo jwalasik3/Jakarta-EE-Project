@@ -10,6 +10,7 @@ public class UsersToResponseFunction implements Function<List<User>, GetUsersRes
 
     @Override
     public GetUsersResponse apply(List<User> users) {
+
         return GetUsersResponse.builder()
                 .users(users.stream().map(user -> GetUsersResponse.User.builder()
                         .id(user.getId())

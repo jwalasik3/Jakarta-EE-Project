@@ -1,11 +1,13 @@
-package com.example.jee_project.configuration.listener;
+package com.example.jee_project.configuration.observer;
 
 import com.example.jee_project.user.entity.User;
 import com.example.jee_project.user.entity.UserRole;
 import com.example.jee_project.user.service.UserService;
-import jakarta.servlet.ServletContextEvent;
-import jakarta.servlet.ServletContextListener;
-import jakarta.servlet.annotation.WebListener;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.Initialized;
+import jakarta.enterprise.context.control.RequestContextController;
+import jakarta.enterprise.event.Observes;
+import jakarta.inject.Inject;
 import lombok.SneakyThrows;
 
 import java.io.InputStream;
@@ -13,17 +15,27 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
-@WebListener//using annotation does not allow configuring order
-public class InitializedData implements ServletContextListener {
+@ApplicationScoped
+public class InitializedData {
 
-    private UserService userService;
+    private final UserService userService;
+    private final RequestContextController requestContextController;
 
-    @Override
-    public void contextInitialized(ServletContextEvent event) {
+    @Inject
+    public InitializedData(
+            UserService userService,
+            RequestContextController requestContextController
+    ) {
 
-        userService = (UserService) event.getServletContext().getAttribute("userService");
+        this.userService = userService;
+        this.requestContextController = requestContextController;
+    }
+
+    public void contextInitialized(@Observes @Initialized(ApplicationScoped.class) Object init) {
+
         init();
     }
+
 
     /**
      * Initializes database with some example values. Should be called after creating this object. This object should be
@@ -31,6 +43,8 @@ public class InitializedData implements ServletContextListener {
      */
     @SneakyThrows
     private void init() {
+
+        requestContextController.activate();
         User admin = User.builder()
                 .id(UUID.fromString("c4804e0f-769e-4ab9-9ebe-0578fb4f00a6"))
                 .login("admin")
@@ -79,6 +93,8 @@ public class InitializedData implements ServletContextListener {
         userService.create(kevin);
         userService.create(alice);
         userService.create(student);
+
+        requestContextController.deactivate();
     }
 
     /**
@@ -87,6 +103,7 @@ public class InitializedData implements ServletContextListener {
      */
     @SneakyThrows
     private byte[] getResourceAsByteArray(String name) {
+
         try (InputStream is = this.getClass().getResourceAsStream(name)) {
             if (is != null) {
                 return is.readAllBytes();

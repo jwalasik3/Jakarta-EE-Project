@@ -9,6 +9,7 @@ public class BadRequestException extends HttpRequestException {
 
 
     public BadRequestException() {
+
         super(RESPONSE_CODE);
     }
 
@@ -16,6 +17,7 @@ public class BadRequestException extends HttpRequestException {
      * @param message the detail message
      */
     public BadRequestException(String message) {
+
         super(message, RESPONSE_CODE);
     }
 
@@ -24,6 +26,7 @@ public class BadRequestException extends HttpRequestException {
      * @param cause   the cause
      */
     public BadRequestException(String message, Throwable cause) {
+
         super(message, cause, RESPONSE_CODE);
     }
 
@@ -31,6 +34,7 @@ public class BadRequestException extends HttpRequestException {
      * @param cause the cause
      */
     public BadRequestException(Throwable cause) {
+
         super(cause, RESPONSE_CODE);
     }
 
@@ -41,6 +45,7 @@ public class BadRequestException extends HttpRequestException {
      * @param writableStackTrace whether the stack trace should be writable
      */
     public BadRequestException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+
         super(message, cause, enableSuppression, writableStackTrace, RESPONSE_CODE);
     }
 

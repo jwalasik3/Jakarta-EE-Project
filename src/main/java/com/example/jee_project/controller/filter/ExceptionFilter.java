@@ -18,6 +18,7 @@ public class ExceptionFilter extends HttpFilter {
 
     @Override
     protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+
         try {
             super.doFilter(request, response, chain);
         } catch (HttpRequestException ex) {

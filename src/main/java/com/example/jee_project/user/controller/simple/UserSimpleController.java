@@ -8,15 +8,19 @@ import com.example.jee_project.user.dto.GetUserResponse;
 import com.example.jee_project.user.dto.GetUsersResponse;
 import com.example.jee_project.user.entity.User;
 import com.example.jee_project.user.service.UserService;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
 
 import java.io.InputStream;
 import java.util.UUID;
 
+@RequestScoped
 public class UserSimpleController implements UserController {
 
     private final UserService service;
     private final DtoFunctionFactory dtoFactory;
 
+    @Inject
     public UserSimpleController(UserService service, DtoFunctionFactory dtoFunctionFactory) {
 
         this.service = service;

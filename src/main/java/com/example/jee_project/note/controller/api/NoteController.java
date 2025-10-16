@@ -13,13 +13,21 @@ import java.util.UUID;
 public interface NoteController {
 
     GetNoteResponse getNotes();
+
     GetNoteResponse getThreadsNotes(UUID id);
+
     GetNoteResponse getUserCharacters(UUID id);
+
     GetNoteResponse getCharacter(UUID uuid);
+
     void putCharacter(UUID id, PutNoteRequest request);
+
     void patchCharacter(UUID id, PatchNoteRequest request);
+
     void deleteCharacter(UUID id);
+
     byte[] getCharacterPortrait(UUID id);
+
     void putCharacterPortrait(UUID id, InputStream portrait);
 
 }

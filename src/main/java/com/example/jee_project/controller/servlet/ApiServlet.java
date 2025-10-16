@@ -1,6 +1,7 @@
 package com.example.jee_project.controller.servlet;
 
 import com.example.jee_project.user.controller.api.UserController;
+import jakarta.inject.Inject;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.servlet.ServletException;
@@ -86,27 +87,27 @@ public class ApiServlet extends HttpServlet {
      */
     private final Jsonb jsonb = JsonbBuilder.create();
 
-    @Override
-    protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        if (request.getMethod().equals("PATCH")) {
-//            doPatch(request, response);
-//        } else {
-//            super.service(request, response);
-//        }
-        super.service(request, response);
+    @Inject
+    public ApiServlet(UserController userController) {
+
+        this.userController = userController;
     }
 
+
     @Override
-    public void init() throws ServletException {
-        super.init();
-//        noteController = (NoteController) getServletContext().getAttribute("noteController");
-//        noteThreadController = (NoteThreadController) getServletContext().getAttribute("noteThreadController");
-        userController = (UserController) getServletContext().getAttribute("userController");
+    protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        if (request.getMethod().equals("PATCH")) {
+//            doPatch(request, response);
+        } else {
+            super.service(request, response);
+        }
     }
 
     @SuppressWarnings("RedundantThrows")
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
         String path = parseRequestPath(request);
         String servletPath = request.getServletPath();
         if (Paths.API.equals(servletPath)) {
@@ -132,6 +133,7 @@ public class ApiServlet extends HttpServlet {
     }
 
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
         String path = parseRequestPath(request);
         String servletPath = request.getServletPath();
         if (Paths.API.equals(servletPath)) {
@@ -141,7 +143,8 @@ public class ApiServlet extends HttpServlet {
                 response.addHeader("Location", createUrl(request, Paths.API, "notes", uuid.toString()));
                 return;
             }
-            else*/ if (path.matches(Patterns.USER_AVATAR.pattern())) {
+            else*/
+            if (path.matches(Patterns.USER_AVATAR.pattern())) {
                 UUID uuid = extractUuid(Patterns.USER_AVATAR, path);
                 userController.putUserAvatar(uuid, request.getPart("avatar").getInputStream());
                 response.addHeader("Location", createUrl(request, Paths.API, "notes", uuid.toString()));
@@ -154,6 +157,7 @@ public class ApiServlet extends HttpServlet {
     @SuppressWarnings("RedundantThrows")
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
         String path = parseRequestPath(request);
         String servletPath = request.getServletPath();
         if (Paths.API.equals(servletPath)) {
@@ -162,7 +166,8 @@ public class ApiServlet extends HttpServlet {
                 userController.deleteUser(uuid);
                 return;
             }
-            else */if (path.matches(Patterns.USER_AVATAR.pattern())) {
+            else */
+            if (path.matches(Patterns.USER_AVATAR.pattern())) {
                 UUID uuid = extractUuid(Patterns.USER_AVATAR, path);
                 userController.deleteAvatar(uuid);
                 return;
@@ -171,28 +176,8 @@ public class ApiServlet extends HttpServlet {
         response.sendError(HttpServletResponse.SC_BAD_REQUEST);
     }
 
-//    @SuppressWarnings("RedundantThrows")
-//    protected void doPatch(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        String path = parseRequestPath(request);
-//        String servletPath = request.getServletPath();
-//        if (Paths.API.equals(servletPath)) {
-//            if (path.matches(Patterns.NOTE.pattern())) {
-//                UUID uuid = extractUuid(Patterns.NOTE, path);
-//                noteController.patchNote(uuid, jsonb.fromJson(request.getReader(), PatchNoteRequest.class));
-//                return;
-//            }
-//        }
-//        response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-//    }
-
-    /**
-     * Extracts UUID from path using provided pattern. Pattern needs to contain UUID in first regular expression group.
-     *
-     * @param pattern regular expression pattern with
-     * @param path    request path containing UUID
-     * @return extracted UUID
-     */
     private static UUID extractUuid(Pattern pattern, String path) {
+
         Matcher matcher = pattern.matcher(path);
         if (matcher.matches()) {
             return UUID.fromString(matcher.group(1));
@@ -207,20 +192,14 @@ public class ApiServlet extends HttpServlet {
      * @return path info (not null)
      */
     private String parseRequestPath(HttpServletRequest request) {
+
         String path = request.getPathInfo();
         path = path != null ? path : "";
         return path;
     }
 
-    /**
-     * Creates URL using host, port and context root from servlet request and any number of path elements. If any of
-     * path elements starts or ends with '/' character, that character is removed.
-     *
-     * @param request servlet request
-     * @param paths   any (can be none) number of path elements
-     * @return created url
-     */
     public static String createUrl(HttpServletRequest request, String... paths) {
+
         StringBuilder builder = new StringBuilder();
         builder.append(request.getScheme())
                 .append("://")
