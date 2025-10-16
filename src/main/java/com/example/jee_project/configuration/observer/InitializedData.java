@@ -95,6 +95,19 @@ public class InitializedData {
         userService.create(student);
 
         requestContextController.deactivate();
+
+        testNoteAndThreadService();
+    }
+
+    private void testNoteAndThreadService() {
+
+        System.out.println("--- Testing Thread Service ---");
+        // TODO: Test the thread service here
+        System.out.println("--- End of Thread Service Testing ---");
+
+        System.out.println("--- Testing Note Service ---");
+        // TODO: Test the note service here
+        System.out.println("--- End of Note Service Testing ---");
     }
 
     /**

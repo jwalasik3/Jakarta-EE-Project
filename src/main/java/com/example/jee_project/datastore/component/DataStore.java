@@ -76,8 +76,8 @@ public class DataStore {
      */
     public synchronized void createNoteThread(NoteThread value) throws IllegalArgumentException {
 
-        if (noteThreads.stream().anyMatch(profession -> profession.getId().equals(value.getId()))) {
-            throw new IllegalArgumentException("The profession id \"%s\" is not unique".formatted(value.getId()));
+        if (noteThreads.stream().anyMatch(thread -> thread.getId().equals(value.getId()))) {
+            throw new IllegalArgumentException("The thread's id \"%s\" is not unique".formatted(value.getId()));
         }
         noteThreads.add(cloningUtility.clone(value));
     }
@@ -135,8 +135,8 @@ public class DataStore {
      */
     public synchronized void deleteNote(UUID id) throws IllegalArgumentException {
 
-        if (!notes.removeIf(character -> character.getId().equals(id))) {
-            throw new IllegalArgumentException("The character with id \"%s\" does not exist".formatted(id));
+        if (!notes.removeIf(note -> note.getId().equals(id))) {
+            throw new IllegalArgumentException("The note with id \"%s\" does not exist".formatted(id));
         }
     }
 
@@ -181,6 +181,13 @@ public class DataStore {
         }
     }
 
+    public synchronized void deleteUser(UUID id) throws IllegalArgumentException {
+
+        if (!users.removeIf(user -> user.getId().equals(id))) {
+            throw new IllegalArgumentException("The user with id \"%s\" does not exist".formatted(value.getId()));
+        }
+    }
+
     /**
      * Clones existing character and updates relationships for values in storage
      *
@@ -208,5 +215,4 @@ public class DataStore {
 
         return entity;
     }
-
 }
