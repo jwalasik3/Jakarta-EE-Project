@@ -1,5 +1,10 @@
 package com.example.jee_project.configuration.observer;
 
+import com.example.jee_project.note.entity.Importance;
+import com.example.jee_project.note.entity.Note;
+import com.example.jee_project.note.entity.NoteThread;
+import com.example.jee_project.note.service.NoteService;
+import com.example.jee_project.note.service.NoteThreadService;
 import com.example.jee_project.user.entity.User;
 import com.example.jee_project.user.entity.UserRole;
 import com.example.jee_project.user.service.UserService;
@@ -19,15 +24,21 @@ import java.util.UUID;
 public class InitializedData {
 
     private final UserService userService;
+    private final NoteService noteService;
+    private final NoteThreadService noteThreadService;
     private final RequestContextController requestContextController;
 
     @Inject
     public InitializedData(
             UserService userService,
+            NoteService noteService,
+            NoteThreadService noteThreadService,
             RequestContextController requestContextController
     ) {
 
         this.userService = userService;
+        this.noteService = noteService;
+        this.noteThreadService = noteThreadService;
         this.requestContextController = requestContextController;
     }
 
@@ -94,20 +105,65 @@ public class InitializedData {
         userService.create(alice);
         userService.create(student);
 
+        Note note1 = Note.builder()
+                .id(UUID.randomUUID())
+                .title("First Note")
+                .user(kevin)
+                .content("This is Kevin's note")
+                .build();
+
+        Note note2 = Note.builder()
+                .id(UUID.randomUUID())
+                .title("Alice's Note")
+                .user(alice)
+                .content("This is Alice's note. Hi, I am Alice.")
+                .build();
+
+        NoteThread thread1 = NoteThread.builder()
+                .id(UUID.randomUUID())
+                .title("Side Note")
+                .importance(Importance.LOW)
+                .build();
+        NoteThread thread2 = NoteThread.builder()
+                .id(UUID.randomUUID())
+                .title("Important Chore Note")
+                .importance(Importance.HIGH)
+                .build();
+
+        note1.setNoteThread(thread1);
+        note2.setNoteThread(thread2);
+        thread1.setNotes(List.of(note1));
+        thread2.setNotes(List.of(note2));
+
+        noteThreadService.createNoteThread(thread1);
+        noteThreadService.createNoteThread(thread2);
+
+        noteService.createNote(note1);
+        noteService.createNote(note2);
+
+        List<Note> notes = noteService.getAllNotes();
+        System.out.println("Get all notes:");
+        System.out.println(notes);
+        System.out.println("Get note by ID:");
+        System.out.println(noteService.getNote(notes.get(0).getId()));
+        noteService.deleteNote(notes.get(0).getId());
+        System.out.println("Get non-existing note:");
+        System.out.println(noteService.getNote(notes.get(0).getId()));
+        System.out.println("Get updated note:");
+        notes.get(1).setTitle("Updated Note");
+        noteService.updateNote(notes.get(1));
+        System.out.println(noteService.getNote(notes.get(1).getId()));
+
+        List<NoteThread> threads = noteThreadService.getNoteThreads();
+        System.out.println("Get all threads");
+        System.out.println(threads);
+        System.out.println("Get thread by ID:");
+        System.out.println(noteThreadService.getNoteThread(threads.get(0).getId()));
+        System.out.println("Get all notes by thread group");
+        System.out.println(noteService.getAllNotesByThread(threads.get(0).getId()));
+        System.out.println();
+
         requestContextController.deactivate();
-
-        testNoteAndThreadService();
-    }
-
-    private void testNoteAndThreadService() {
-
-        System.out.println("--- Testing Thread Service ---");
-        // TODO: Test the thread service here
-        System.out.println("--- End of Thread Service Testing ---");
-
-        System.out.println("--- Testing Note Service ---");
-        // TODO: Test the note service here
-        System.out.println("--- End of Note Service Testing ---");
     }
 
     /**

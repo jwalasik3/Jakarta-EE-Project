@@ -4,12 +4,14 @@ import com.example.jee_project.note.entity.Note;
 import com.example.jee_project.note.repository.api.NoteRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @ApplicationScoped
+@NoArgsConstructor(force = true)
 public class NoteService {
 
     private final NoteRepository repository;

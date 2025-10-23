@@ -18,5 +18,6 @@ public class NoteThread implements Serializable {
     private UUID id;
     private String title;
     private Importance importance;
+    @ToString.Exclude
     private List<Note> notes;
 }

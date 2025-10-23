@@ -184,7 +184,7 @@ public class DataStore {
     public synchronized void deleteUser(UUID id) throws IllegalArgumentException {
 
         if (!users.removeIf(user -> user.getId().equals(id))) {
-            throw new IllegalArgumentException("The user with id \"%s\" does not exist".formatted(value.getId()));
+            throw new IllegalArgumentException("The user with id \"%s\" does not exist".formatted(id));
         }
     }
 
@@ -210,7 +210,7 @@ public class DataStore {
             entity.setNoteThread(noteThreads.stream()
                     .filter(profession -> profession.getId().equals(value.getNoteThread().getId()))
                     .findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException("No profession with id \"%s\".".formatted(value.getNoteThread().getId()))));
+                    .orElseThrow(() -> new IllegalArgumentException("No thread with id \"%s\".".formatted(value.getNoteThread().getId()))));
         }
 
         return entity;

@@ -4,12 +4,14 @@ import com.example.jee_project.note.entity.NoteThread;
 import com.example.jee_project.note.repository.api.NoteThreadRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @ApplicationScoped
+@NoArgsConstructor(force = true)
 public class NoteThreadService {
 
     NoteThreadRepository repository;

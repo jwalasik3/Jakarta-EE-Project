@@ -7,6 +7,6 @@
 
     <context-param>
         <param-name>AVATAR_STORE</param-name>
-        <param-value>C:\\Users\\walas\\IdeaProjects\\externalDataSource</param-value>
+        <param-value>/home/student/IdeaProjects/193650/externalDataSource</param-value>
     </context-param>
 </web-app>

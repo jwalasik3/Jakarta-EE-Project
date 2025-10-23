@@ -22,5 +22,6 @@ public class Note implements Serializable {
     @EqualsAndHashCode.Exclude
     private User user;
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private NoteThread noteThread;
 }
