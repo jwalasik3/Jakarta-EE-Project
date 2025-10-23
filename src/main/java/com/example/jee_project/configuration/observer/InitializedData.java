@@ -141,28 +141,6 @@ public class InitializedData {
         noteService.createNote(note1);
         noteService.createNote(note2);
 
-        List<Note> notes = noteService.getAllNotes();
-        System.out.println("Get all notes:");
-        System.out.println(notes);
-        System.out.println("Get note by ID:");
-        System.out.println(noteService.getNote(notes.get(0).getId()));
-        noteService.deleteNote(notes.get(0).getId());
-        System.out.println("Get non-existing note:");
-        System.out.println(noteService.getNote(notes.get(0).getId()));
-        System.out.println("Get updated note:");
-        notes.get(1).setTitle("Updated Note");
-        noteService.updateNote(notes.get(1));
-        System.out.println(noteService.getNote(notes.get(1).getId()));
-
-        List<NoteThread> threads = noteThreadService.getNoteThreads();
-        System.out.println("Get all threads");
-        System.out.println(threads);
-        System.out.println("Get thread by ID:");
-        System.out.println(noteThreadService.getNoteThread(threads.get(0).getId()));
-        System.out.println("Get all notes by thread group");
-        System.out.println(noteService.getAllNotesByThread(threads.get(0).getId()));
-        System.out.println();
-
         requestContextController.deactivate();
     }
 
