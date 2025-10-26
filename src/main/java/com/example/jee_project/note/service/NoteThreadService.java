@@ -36,4 +36,9 @@ public class NoteThreadService {
 
         repository.create(entity);
     }
+
+    public void deleteNoteThread(UUID id) {
+
+        repository.delete(id);
+    }
 }

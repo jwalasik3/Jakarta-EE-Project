@@ -5,6 +5,7 @@ import com.example.jee_project.user.entity.User;
 
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class UsersToResponseFunction implements Function<List<User>, GetUsersResponse> {
 
@@ -15,7 +16,7 @@ public class UsersToResponseFunction implements Function<List<User>, GetUsersRes
                 .users(users.stream().map(user -> GetUsersResponse.User.builder()
                         .id(user.getId())
                         .login(user.getLogin())
-                        .build()).toList())
+                        .build()).collect(Collectors.toList()))
                 .build();
     }
 

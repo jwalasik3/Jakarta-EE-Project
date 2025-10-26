@@ -1,12 +1,13 @@
 package com.example.jee_project.note.view;
 
 import com.example.jee_project.component.ModelFunctionFactory;
-import com.example.jee_project.note.model.ThreadModel;
 import com.example.jee_project.note.model.ThreadsModel;
 import com.example.jee_project.note.service.NoteThreadService;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+
+import java.util.UUID;
 
 @RequestScoped
 @Named
@@ -33,12 +34,12 @@ public class ThreadList {
     /**
      * Action for clicking delete action.
      *
-     * @param character character to be removed
+     * @param thread character to be removed
      * @return navigation case to list_characters
      */
-    public String deleteAction(ThreadsModel.Thread thread) {
-        service.delete(thread.g());
-        return "character_list?faces-redirect=true";
+    public String deleteAction(UUID id) {
+        service.deleteNoteThread(id);
+        return "note_thread_list?faces-redirect=true";
     }
 
 }

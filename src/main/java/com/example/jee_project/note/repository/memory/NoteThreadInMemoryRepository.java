@@ -44,12 +44,12 @@ public class NoteThreadInMemoryRepository implements NoteThreadRepository {
     @Override
     public void delete(UUID id) {
 
-        throw new UnsupportedOperationException("Operation not implemented.");
+        store.deleteNoteThread(id);
     }
 
     @Override
     public void update(NoteThread entity) {
 
-        throw new UnsupportedOperationException("Operation not implemented.");
+        store.updateNoteThread(entity);
     }
 }

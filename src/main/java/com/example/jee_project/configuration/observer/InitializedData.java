@@ -17,6 +17,7 @@ import lombok.SneakyThrows;
 
 import java.io.InputStream;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -106,34 +107,34 @@ public class InitializedData {
         userService.create(student);
 
         Note note1 = Note.builder()
-                .id(UUID.randomUUID())
+                .id(UUID.fromString("a99c3ee1-d399-4b13-a72a-f24458d590a0"))
                 .title("First Note")
                 .user(kevin)
                 .content("This is Kevin's note")
                 .build();
 
         Note note2 = Note.builder()
-                .id(UUID.randomUUID())
+                .id(UUID.fromString("a99c3ee1-d399-4b13-a72a-f24458d590a1"))
                 .title("Alice's Note")
                 .user(alice)
                 .content("This is Alice's note. Hi, I am Alice.")
                 .build();
 
         NoteThread thread1 = NoteThread.builder()
-                .id(UUID.randomUUID())
+                .id(UUID.fromString("a97c3ee1-d399-4b13-a72a-f24458d590a0"))
                 .title("Side Note")
                 .importance(Importance.LOW)
                 .build();
         NoteThread thread2 = NoteThread.builder()
-                .id(UUID.randomUUID())
+                .id(UUID.fromString("a97c3ee1-d399-4b13-a72a-f24458d590a1"))
                 .title("Important Chore Note")
                 .importance(Importance.HIGH)
                 .build();
 
         note1.setNoteThread(thread1);
         note2.setNoteThread(thread2);
-        thread1.setNotes(List.of(note1));
-        thread2.setNotes(List.of(note2));
+        thread1.setNotes(new ArrayList<>(List.of(note1)));
+        thread2.setNotes(new ArrayList<>(List.of(note2)));
 
         noteThreadService.createNoteThread(thread1);
         noteThreadService.createNoteThread(thread2);

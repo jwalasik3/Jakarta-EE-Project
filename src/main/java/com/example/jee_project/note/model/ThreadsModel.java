@@ -1,6 +1,5 @@
 package com.example.jee_project.note.model;
 
-import jakarta.inject.Named;
 import lombok.*;
 
 import java.util.List;

@@ -82,6 +82,23 @@ public class DataStore {
         noteThreads.add(cloningUtility.clone(value));
     }
 
+    public synchronized void updateNoteThread(NoteThread value) {
+
+        NoteThread entity = cloningUtility.clone(value);
+        if (noteThreads.removeIf(noteThread -> noteThread.getId().equals(value.getId()))) {
+            noteThreads.add(entity);
+        } else {
+            throw new IllegalArgumentException("The thread with id \"%s\" does not exist".formatted(value.getId()));
+        }
+    }
+
+
+    public synchronized void deleteNoteThread(UUID id) {
+
+        notes.removeIf(note -> note.getNoteThread().getId().equals(id));
+        noteThreads.removeIf(thread -> thread.getId().equals(id));
+    }
+
     /**
      * Seeks for all characters.
      *
@@ -123,7 +140,7 @@ public class DataStore {
         if (notes.removeIf(character -> character.getId().equals(value.getId()))) {
             notes.add(entity);
         } else {
-            throw new IllegalArgumentException("The character with id \"%s\" does not exist".formatted(value.getId()));
+            throw new IllegalArgumentException("The note with id \"%s\" does not exist".formatted(value.getId()));
         }
     }
 
@@ -137,6 +154,9 @@ public class DataStore {
 
         if (!notes.removeIf(note -> note.getId().equals(id))) {
             throw new IllegalArgumentException("The note with id \"%s\" does not exist".formatted(id));
+        }
+        for (NoteThread thread : noteThreads) {
+            thread.getNotes().removeIf(note -> note.getId().equals(id));
         }
     }
 

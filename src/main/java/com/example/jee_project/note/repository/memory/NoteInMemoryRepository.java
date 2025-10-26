@@ -9,6 +9,7 @@ import jakarta.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RequestScoped
 public class NoteInMemoryRepository implements NoteRepository {
@@ -40,7 +41,7 @@ public class NoteInMemoryRepository implements NoteRepository {
 
         return store.findAllNotes().stream()
                 .filter(note -> note.getUser().getId().equals(userId))
-                .toList();
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -48,7 +49,7 @@ public class NoteInMemoryRepository implements NoteRepository {
 
         return store.findAllNotes().stream()
                 .filter(note -> note.getNoteThread().getId().equals(threadId))
-                .toList();
+                .collect(Collectors.toList());
     }
 
     @Override

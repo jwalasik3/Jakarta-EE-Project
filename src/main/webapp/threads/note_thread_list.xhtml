@@ -11,17 +11,24 @@
         <article class="text--justified">
             <header><h2>Threads</h2></header>
 
-            <h:dataTable value="#{threadsModel.thread}" var="thread"
+            <h:dataTable value="#{threadList.threads.threads}" var="thread"
                          styleClass="table align-middle mb-0 bg-white" headerClass="bg-light">
 
                 <h:column>
-                    <f:facet name="header">Name</f:facet>
+                    <f:facet name="header">Title</f:facet>
                     <h:outputText value="#{thread.title}"/>
                 </h:column>
 
                 <h:column>
+                    <f:facet name="header">View</f:facet>
+                    <h:link outcome="/threads/note_thread_view.xhtml" value="View">
+                        <f:param name="id" value="#{thread.id}"/>
+                    </h:link>
+                </h:column>
+
+                <h:column>
                     <f:facet name="header">Edit</f:facet>
-                    <h:link outcome="/note_thread/note_thread_edit.xhtml" value="Edit">
+                    <h:link outcome="/threads/note_thread_edit.xhtml" value="Edit">
                         <f:param name="id" value="#{thread.id}"/>
                     </h:link>
                 </h:column>
@@ -30,13 +37,13 @@
                     <f:facet name="header">Delete</f:facet>
                     <h:form>
                         <h:commandButton styleClass="btn" value="Delete"
-                                         action="#{threadsList.deleteAction(note)}"/>
+                                         action="#{threadList.deleteAction(thread.id)}"/>
                     </h:form>
                 </h:column>
 
                 <f:facet name="footer">
-                    <h:button styleClass="btn" outcome="/note/note_create_basic.xhtml"
-                              value="Create new note"/>
+                    <h:button styleClass="btn" outcome="/threads/thread_create_basic.xhtml"
+                              value="Create new thread"/>
                 </f:facet>
             </h:dataTable>
         </article>
