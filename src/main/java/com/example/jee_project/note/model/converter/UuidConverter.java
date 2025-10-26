@@ -1,4 +1,4 @@
-package com.example.jee_project.component;
+package com.example.jee_project.note.model.converter;
 
 import jakarta.faces.component.UIComponent;
 import jakarta.faces.context.FacesContext;

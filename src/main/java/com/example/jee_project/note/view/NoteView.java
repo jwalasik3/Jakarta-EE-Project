@@ -1,7 +1,9 @@
 package com.example.jee_project.note.view;
 
 import com.example.jee_project.component.ModelFunctionFactory;
+import com.example.jee_project.note.entity.Note;
 import com.example.jee_project.note.entity.NoteThread;
+import com.example.jee_project.note.model.NoteModel;
 import com.example.jee_project.note.model.ThreadModel;
 import com.example.jee_project.note.service.NoteService;
 import com.example.jee_project.note.service.NoteThreadService;
@@ -20,10 +22,9 @@ import java.util.UUID;
 
 @ViewScoped
 @Named
-public class ThreadView implements Serializable {
+public class NoteView implements Serializable {
 
-    private final NoteThreadService service;
-    private final NoteService noteService;
+    private final NoteService service;
     private final ModelFunctionFactory factory;
 
     @Setter
@@ -31,31 +32,24 @@ public class ThreadView implements Serializable {
     private String id;
 
     @Getter
-    private ThreadModel noteThread;
+    private NoteModel note;
 
     @Inject
-    public ThreadView(NoteThreadService service, NoteService noteService, ModelFunctionFactory factory) {
+    public NoteView(NoteService service, ModelFunctionFactory factory) {
 
         this.service = service;
-        this.noteService = noteService;
         this.factory = factory;
     }
 
     public void init() throws IOException {
 
-        Optional<NoteThread> noteThread = service.getNoteThread(UUID.fromString(id));
-        if (noteThread.isPresent()) {
+        Optional<Note> note = service.getNote(UUID.fromString(id));
+        if (note.isPresent()) {
 
-            this.noteThread = this.factory.threadToModel().apply(noteThread.get());
+            this.note = this.factory.noteToModel().apply(note.get());
         } else {
 
             FacesContext.getCurrentInstance().getExternalContext().responseSendError(HttpServletResponse.SC_NOT_FOUND, "Note thread not found");
         }
-    }
-
-    public String deleteAction(UUID id) {
-
-        noteService.deleteNote(id);
-        return String.format("note_thread_view?id=%s&faces-redirect=true", this.id);
     }
 }
