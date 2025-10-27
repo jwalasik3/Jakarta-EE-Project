@@ -125,6 +125,11 @@ public class DataStore {
         }
         Note entity = cloneWithRelationships(value);
         notes.add(entity);
+        NoteThread targetThread = entity.getNoteThread();
+        if (targetThread != null) {
+            targetThread.getNotes().removeIf(note -> note.getId().equals(entity.getId()));
+            targetThread.getNotes().add(entity);
+        }
     }
 
     /**

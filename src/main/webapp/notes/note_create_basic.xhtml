@@ -14,6 +14,15 @@
             <header><h2>Create note - basic information</h2></header>
             <h:form styleClass="container" onreset="onReset()" enctype="multipart/form-data">
                 <div class="row">
+                    <div class="col-2 p-2 text-center">
+                        <h:button styleClass="btn" value="Previous" disabled="true"/>
+                    </div>
+                    <div class="col-2 p-2 text-center">
+                        <h:commandButton styleClass="btn" value="Next"
+                                         action="#{noteCreate.goToThreadAction()}"/>
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col-4 p-2">
                         <div class="form-outline">
                             <h:inputText id="title" value="#{noteCreate.note.title}" styleClass="form-control"/>
