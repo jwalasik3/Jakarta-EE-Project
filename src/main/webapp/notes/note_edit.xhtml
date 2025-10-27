@@ -6,19 +6,19 @@
                 template="/WEB-INF/template/main.xhtml">
 
     <f:metadata>
-        <f:viewParam name="id" value="#{threadEdit.id}" required="true"/>
-        <f:viewAction action="#{characterEdit.init()}"/>
+        <f:viewParam name="id" value="#{noteEdit.id}" required="true"/>
+        <f:viewAction action="#{noteEdit.init()}"/>
     </f:metadata>
 
     <ui:define name="content">
         <article>
-            <header><h2>Edit character info</h2></header>
+            <header><h2>Edit note info</h2></header>
             <h:form styleClass="container" onreset="onReset()" enctype="multipart/form-data">
                 <div class="row">
                     <div class="col-4 p-2">
                         <div class="form-outline">
-                            <h:inputText id="name" value="#{characterEdit.character.name}" styleClass="form-control"/>
-                            <h:outputLabel for="name" value="Name:" styleClass="form-label"/>
+                            <h:inputText id="title" value="#{noteEdit.note.title}" styleClass="form-control"/>
+                            <h:outputLabel for="title" value="Title:" styleClass="form-label"/>
                         </div>
                     </div>
                 </div>
@@ -26,8 +26,8 @@
                 <div class="row">
                     <div class="col-4 p-2">
                         <div class="form-outline">
-                            <h:inputText id="age" value="#{characterEdit.character.age}" styleClass="form-control"/>
-                            <h:outputLabel for="age" value="Age:" styleClass="form-label"/>
+                            <h:inputText id="content" value="#{noteEdit.note.content}" styleClass="form-control"/>
+                            <h:outputLabel for="content" value="Content:" styleClass="form-label"/>
                         </div>
                     </div>
                 </div>
@@ -35,19 +35,11 @@
                 <div class="row">
                     <div class="col-4 p-2">
                         <div class="form-outline">
-                            <h:inputFile id="portrait" value="#{characterEdit.character.portrait}"
-                                         styleClass="form-control active"/>
-                            <h:outputLabel for="portrait" value="Portrait:" styleClass="form-label"/>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-4 p-2">
-                        <div class="form-outline">
-                            <h:inputTextarea id="background" value="#{characterEdit.character.background}"
-                                             styleClass="form-control" rows="4"/>
-                            <h:outputLabel for="background" value="Background:" styleClass="form-label"/>
+                            <h:selectOneMenu value="#{noteEdit.note.thread}" converter="noteThreadConverter" styleClass="form-control">
+                                <f:selectItems value="#{noteEdit.threads}" var="thread"
+                                               itemValue="#{thread}" itemLabel="#{thread.title}" />
+                            </h:selectOneMenu>
+                            <h:outputLabel value="Note thread:" styleClass="form-label"/>
                         </div>
                     </div>
                 </div>
@@ -55,7 +47,7 @@
                 <div class="row">
                     <div class="col-2 p-2 text-center">
                         <h:commandButton styleClass="btn btn-primary" value="Update"
-                                         action="#{characterEdit.saveAction()}"/>
+                                         action="#{noteEdit.saveAction()}"/>
                     </div>
                     <div class="col-2 p-2 text-center">
                         <h:commandButton styleClass="btn btn-secondary" type="reset" value="Reset"/>
@@ -66,4 +58,3 @@
     </ui:define>
 
 </ui:composition>
-

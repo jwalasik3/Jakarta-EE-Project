@@ -6,7 +6,7 @@
                 template="/WEB-INF/template/main.xhtml">
 
     <f:metadata>
-        <f:viewParam name="id" value="#{threadView.id}" required="true" converter="jakarta.faces.UuidConverter"/>
+        <f:viewParam name="id" value="#{threadView.id}" required="true"/>
         <f:viewAction action="#{threadView.init()}"/>
     </f:metadata>
 

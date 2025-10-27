@@ -3,7 +3,7 @@ package com.example.jee_project.note.view;
 import com.example.jee_project.component.ModelFunctionFactory;
 import com.example.jee_project.note.entity.Note;
 import com.example.jee_project.note.entity.NoteThread;
-import com.example.jee_project.note.model.NoteModel;
+import com.example.jee_project.note.model.NoteEditModel;
 import com.example.jee_project.note.model.ThreadModel;
 import com.example.jee_project.note.service.NoteService;
 import com.example.jee_project.note.service.NoteThreadService;
@@ -17,39 +17,52 @@ import lombok.Setter;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @ViewScoped
 @Named
-public class NoteView implements Serializable {
+public class NoteEdit implements Serializable {
 
     private final NoteService service;
+    private final NoteThreadService threadService;
     private final ModelFunctionFactory factory;
 
     @Setter
     @Getter
-    private String id;
+    private UUID id;
 
     @Getter
-    private NoteModel note;
+    private NoteEditModel note;
+
+    @Getter
+    private List<ThreadModel> threads;
 
     @Inject
-    public NoteView(NoteService service, ModelFunctionFactory factory) {
-
+    public NoteEdit(NoteService service, NoteThreadService threadService, ModelFunctionFactory factory) {
         this.service = service;
+        this.threadService = threadService;
         this.factory = factory;
     }
 
     public void init() throws IOException {
-
-        Optional<Note> note = service.getNote(UUID.fromString(id));
+        System.out.println("Wywołano init(), id: " + id);
+        Optional<Note> note = service.getNote(id);
         if (note.isPresent()) {
-
-            this.note = this.factory.noteToModel().apply(note.get());
+            this.note = factory.noteToEditModel().apply(note.get());
+            threads = threadService.getNoteThreads().stream().map(factory.threadToModel()).collect(Collectors.toList());
+            System.out.println("Liczba wątków: " + threads.size());
         } else {
-
             FacesContext.getCurrentInstance().getExternalContext().responseSendError(HttpServletResponse.SC_NOT_FOUND, "Note not found");
         }
     }
+
+    public String saveAction() {
+        service.updateNote(factory.updateNote().apply(service.getNote(id).orElseThrow(), note));
+        String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
+        return viewId + "?faces-redirect=true&includeViewParams=true";
+    }
+
 }

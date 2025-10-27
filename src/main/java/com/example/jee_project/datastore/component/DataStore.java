@@ -139,6 +139,14 @@ public class DataStore {
         Note entity = cloneWithRelationships(value);
         if (notes.removeIf(character -> character.getId().equals(value.getId()))) {
             notes.add(entity);
+
+            for (NoteThread thread : noteThreads) {
+                thread.getNotes().removeIf(note -> note.getId().equals(value.getId()));
+            }
+            NoteThread targetThread = entity.getNoteThread();
+            if (targetThread != null) {
+                targetThread.getNotes().add(entity);
+            }
         } else {
             throw new IllegalArgumentException("The note with id \"%s\" does not exist".formatted(value.getId()));
         }

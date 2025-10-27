@@ -1,4 +1,4 @@
-package com.example.jee_project.note.model.converter;
+package com.example.jee_project.view.converter;
 
 import jakarta.faces.component.UIComponent;
 import jakarta.faces.context.FacesContext;
@@ -7,7 +7,7 @@ import jakarta.faces.convert.FacesConverter;
 
 import java.util.UUID;
 
-@FacesConverter(value = "jakarta.faces.UuidConverter", forClass = UUID.class)
+@FacesConverter(forClass = UUID.class)
 public class UuidConverter implements Converter<UUID> {
 
     @Override

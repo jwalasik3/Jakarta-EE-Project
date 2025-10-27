@@ -6,7 +6,7 @@
                 template="/WEB-INF/template/main.xhtml">
 
     <f:metadata>
-        <f:viewParam name="id" value="#{noteView.id}" required="true" converter="jakarta.faces.UuidConverter"/>
+        <f:viewParam name="id" value="#{noteView.id}" required="true"/>
         <f:viewAction action="#{noteView.init()}"/>
     </f:metadata>
 
