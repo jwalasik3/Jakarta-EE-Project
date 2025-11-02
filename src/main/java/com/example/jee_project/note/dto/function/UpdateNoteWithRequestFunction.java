@@ -12,8 +12,8 @@ public class UpdateNoteWithRequestFunction {
 
         return Note.builder()
                 .id(entity.getId())
-                .title(request.getTitle())
-                .content(request.getContent())
+                .title(request.getTitle() != null ? request.getTitle() : entity.getTitle())
+                .content(request.getContent() != null ? request.getContent() : entity.getContent())
                 .user(entity.getUser())
                 .noteThread(NoteThread.builder().id(threadId).build())
                 .build();

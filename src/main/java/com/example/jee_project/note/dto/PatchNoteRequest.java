@@ -1,9 +1,13 @@
 package com.example.jee_project.note.dto;
 
 import com.example.jee_project.note.entity.NoteThread;
-import lombok.Getter;
+import lombok.*;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Setter
 @Getter
+@Builder
 public class PatchNoteRequest {
 
     private String title;

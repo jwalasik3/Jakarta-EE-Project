@@ -127,6 +127,8 @@ public class DataStore {
         notes.add(entity);
         NoteThread targetThread = entity.getNoteThread();
         if (targetThread != null) {
+            log.info("Adding note to thread: " + targetThread.toString());
+            entity.setNoteThread(targetThread);
             targetThread.getNotes().removeIf(note -> note.getId().equals(entity.getId()));
             targetThread.getNotes().add(entity);
         }

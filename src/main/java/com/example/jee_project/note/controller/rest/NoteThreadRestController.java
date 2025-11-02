@@ -41,7 +41,7 @@ public class NoteThreadRestController implements NoteThreadController {
     }
 
     @Override
-    public GetNoteThreadResponse getNoteThreads(UUID id) {
+    public GetNoteThreadResponse getNoteThread(UUID id) {
 
         return service.getNoteThread(id)
                 .map(factory.noteThreadToResponseFunction())

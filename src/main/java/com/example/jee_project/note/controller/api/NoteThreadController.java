@@ -20,7 +20,7 @@ public interface NoteThreadController {
     @GET
     @Path("/threads/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    GetNoteThreadResponse getNoteThreads(@PathParam("id") UUID id);
+    GetNoteThreadResponse getNoteThread(@PathParam("id") UUID id);
 
     @PUT
     @Path("/threads/{id}")

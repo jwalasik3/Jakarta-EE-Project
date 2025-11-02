@@ -1,7 +1,8 @@
 @host = http://localhost:9080/simple-notes/api
-@threadId = a97c3ee1-d399-4b13-a72a-f24458d590a0
-@noteId = a99c3ee1-d399-4b13-a72a-f24458d590a0
-
+@threadId = a97c3ee1-d399-4b13-a72a-f24458d590a1
+@noteId = a99c3ee1-d399-4b13-a72a-f24458d590a1
+@newThreadId = b12c3ee1-d399-4b13-a72a-f24458d590b1
+@newNoteId = a99c3ee1-d399-4b13-a72a-f24458d590a9
 ### Get all note threads
 GET {{host}}/threads
 Accept: application/json
@@ -10,8 +11,8 @@ Accept: application/json
 GET {{host}}/threads/{{threadId}}
 Accept: application/json
 
-### Create / Replace a note thread (PUT)
-PUT {{host}}/threads/{{threadId}}
+### Create a note thread (PUT)
+PUT {{host}}/threads/{{newThreadId}}
 Content-Type: application/json
 
 {
@@ -19,7 +20,7 @@ Content-Type: application/json
   "description": "Opis wątku (opcjonalny)"
 }
 
-### Patch a note thread (PATCH)
+### Update a note thread (PATCH)
 PATCH {{host}}/threads/{{threadId}}
 Content-Type: application/json
 
@@ -43,14 +44,13 @@ Accept: application/json
 GET {{host}}/notes/{{noteId}}
 Accept: application/json
 
-### Create / Replace a note in a thread (PUT)
-PUT {{host}}/threads/{{threadId}}/notes/{{noteId}}
+### Create a note in a thread (PUT)
+PUT {{host}}/threads/{{threadId}}/notes/{{newNoteId}}
 Content-Type: application/json
 
 {
-  "content": "Treść notatki",
-  "author": "autor@example.com",
-  "pinned": false
+  "title": "Nowy tytuł notatki",
+  "content": "Treść notatki"
 }
 
 ### Patch a note in a thread (PATCH)

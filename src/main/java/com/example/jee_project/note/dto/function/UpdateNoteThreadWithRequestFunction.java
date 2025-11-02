@@ -12,9 +12,9 @@ public class UpdateNoteThreadWithRequestFunction implements BiFunction<NoteThrea
 
         return NoteThread.builder()
                 .id(entity.getId())
-                .title(request.getTitle())
-                .importance(request.getImportance())
-                .notes(request.getNotes())
+                .title(request.getTitle() != null ? request.getTitle() : entity.getTitle())
+                .importance(request.getImportance() != null ? request.getImportance() : entity.getImportance())
+                .notes(request.getNotes() != null ? request.getNotes() : entity.getNotes())
                 .build();
     }
 }
