@@ -87,11 +87,6 @@ public class NoteCreate implements Serializable {
         return "/threads/note_thread_list.xhtml?faces-redirect=true";
     }
 
-    public String goToConfirmAction() {
-
-        return "/notes/note_create__confirm.xhtml?faces-redirect=true";
-    }
-
     public String saveAction() {
 
         noteService.createNote(factory.modelToNote().apply(note));
