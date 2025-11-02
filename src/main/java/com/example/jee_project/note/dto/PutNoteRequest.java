@@ -2,7 +2,9 @@ package com.example.jee_project.note.dto;
 
 import com.example.jee_project.note.entity.NoteThread;
 import com.example.jee_project.user.entity.User;
+import lombok.Getter;
 
+@Getter
 public class PutNoteRequest {
 
     private String title;

@@ -6,8 +6,6 @@
         <feature>jsonb-3.0</feature>
         <feature>cdi-4.0</feature>
         <feature>faces-4.0</feature>
+        <feature>restfulWS-3.1</feature>
     </featureManager>
-    <httpEndpoint id="defaultHttpEndpoint"
-                  httpPort="9082"
-                  httpsPort="9445" />
 </server>

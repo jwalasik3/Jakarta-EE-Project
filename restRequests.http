@@ -1,0 +1,65 @@
+@host = http://localhost:9080/simple-notes/api
+@threadId = a97c3ee1-d399-4b13-a72a-f24458d590a0
+@noteId = a99c3ee1-d399-4b13-a72a-f24458d590a0
+
+### Get all note threads
+GET {{host}}/threads
+Accept: application/json
+
+### Get a single note thread
+GET {{host}}/threads/{{threadId}}
+Accept: application/json
+
+### Create / Replace a note thread (PUT)
+PUT {{host}}/threads/{{threadId}}
+Content-Type: application/json
+
+{
+  "title": "Przykładowy wątek",
+  "description": "Opis wątku (opcjonalny)"
+}
+
+### Patch a note thread (PATCH)
+PATCH {{host}}/threads/{{threadId}}
+Content-Type: application/json
+
+{
+  "title": "Zaktualizowany tytuł"
+}
+
+### Delete a note thread
+DELETE {{host}}/threads/{{threadId}}
+
+
+### Get all notes
+GET {{host}}/notes
+Accept: application/json
+
+### Get notes for a specific thread
+GET {{host}}/threads/{{threadId}}/notes
+Accept: application/json
+
+### Get a single note
+GET {{host}}/notes/{{noteId}}
+Accept: application/json
+
+### Create / Replace a note in a thread (PUT)
+PUT {{host}}/threads/{{threadId}}/notes/{{noteId}}
+Content-Type: application/json
+
+{
+  "content": "Treść notatki",
+  "author": "autor@example.com",
+  "pinned": false
+}
+
+### Patch a note in a thread (PATCH)
+PATCH {{host}}/threads/{{threadId}}/notes/{{noteId}}
+Content-Type: application/json
+
+{
+  "content": "Zmieniona treść"
+}
+
+### Delete a note
+DELETE {{host}}/notes/{{noteId}}

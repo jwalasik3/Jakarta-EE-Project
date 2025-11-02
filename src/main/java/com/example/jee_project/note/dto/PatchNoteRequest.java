@@ -1,7 +1,9 @@
 package com.example.jee_project.note.dto;
 
 import com.example.jee_project.note.entity.NoteThread;
+import lombok.Getter;
 
+@Getter
 public class PatchNoteRequest {
 
     private String title;

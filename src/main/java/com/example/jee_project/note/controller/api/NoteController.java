@@ -1,33 +1,46 @@
 package com.example.jee_project.note.controller.api;
 
 import com.example.jee_project.note.dto.GetNoteResponse;
+import com.example.jee_project.note.dto.GetNotesResponse;
 import com.example.jee_project.note.dto.PatchNoteRequest;
 import com.example.jee_project.note.dto.PutNoteRequest;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 
-import java.io.InputStream;
 import java.util.UUID;
 
 /**
  * Controller for managing collections notes' representations.
  */
+@Path("")
 public interface NoteController {
 
-    GetNoteResponse getNotes();
+    @GET
+    @Path("/notes")
+    @Produces(MediaType.APPLICATION_JSON)
+    GetNotesResponse getNotes();
 
-    GetNoteResponse getThreadsNotes(UUID id);
+    @GET
+    @Path("/threads/{id}/notes")
+    @Produces(MediaType.APPLICATION_JSON)
+    GetNotesResponse getThreadsNotes(@PathParam("id") UUID id);
 
-    GetNoteResponse getUserCharacters(UUID id);
+    @GET
+    @Path("/notes/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    GetNoteResponse getNote(@PathParam("id") UUID id);
 
-    GetNoteResponse getCharacter(UUID uuid);
+    @PUT
+    @Path("/threads/{threadId}/notes/{noteId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    void putNote(@PathParam("threadId") UUID threadId, @PathParam("noteId") UUID noteId, PutNoteRequest request);
 
-    void putCharacter(UUID id, PutNoteRequest request);
+    @PATCH
+    @Path("/threads/{threadId}/notes/{noteId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    void patchNote(@PathParam("threadId") UUID threadId, @PathParam("noteId") UUID noteId, PatchNoteRequest request);
 
-    void patchCharacter(UUID id, PatchNoteRequest request);
-
-    void deleteCharacter(UUID id);
-
-    byte[] getCharacterPortrait(UUID id);
-
-    void putCharacterPortrait(UUID id, InputStream portrait);
-
+    @DELETE
+    @Path("/notes/{id}")
+    void deleteNote(@PathParam("id") UUID id);
 }
