@@ -4,6 +4,7 @@ import com.example.jee_project.note.entity.NoteThread;
 import com.example.jee_project.note.repository.api.NoteThreadRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
@@ -32,16 +33,19 @@ public class NoteThreadService {
         return repository.findAll();
     }
 
+    @Transactional
     public void createNoteThread(NoteThread entity) {
 
         repository.create(entity);
     }
 
+    @Transactional
     public void updateNoteThread(NoteThread entity) {
 
         repository.update(entity);
     }
 
+    @Transactional
     public void deleteNoteThread(UUID id) {
 
         repository.delete(id);

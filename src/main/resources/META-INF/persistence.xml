@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
+             version="3.0">
+    <persistence-unit name="notesPU" transaction-type="JTA">
+        <jta-data-source>jdbc/SimpleNoteNotes</jta-data-source>
+
+        <properties>
+            <!-- Ask provider to create database schema on startup -->
+            <property name="jakarta.persistence.schema-generation.database.action" value="create"/>
+            <property name="eclipselink.logging.level.sql" value="FINE"/>
+            <property name="eclipselink.logging.level" value="FINE"/>
+            <property name="eclipselink.logging.level.cache" value="FINE"/>
+            <property name="eclipselink.logging.parameters" value="true"/>
+            <!-- Uncomment/comment two lines below to enable/disable batch queries. -->
+            <property name="eclipselink.jdbc.batch-writing" value="JDBC"/>
+            <property name="eclipselink.jdbc.batch-writing.size" value="500"/>
+
+        </properties>
+    </persistence-unit>
+</persistence>

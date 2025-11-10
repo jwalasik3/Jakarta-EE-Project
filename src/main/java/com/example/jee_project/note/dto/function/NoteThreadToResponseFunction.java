@@ -14,12 +14,6 @@ public class NoteThreadToResponseFunction implements Function<NoteThread, GetNot
                 .id(noteThread.getId())
                 .title(noteThread.getTitle())
                 .importance(noteThread.getImportance())
-                .notes(noteThread.getNotes() != null ?
-                        noteThread.getNotes().stream().map(note -> GetNoteThreadResponse.Note.builder()
-                            .id(note.getId())
-                            .title(note.getTitle())
-                            .build()).toList()
-                        : null)
                 .build();
     }
 }

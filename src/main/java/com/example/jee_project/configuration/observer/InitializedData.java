@@ -17,7 +17,6 @@ import lombok.SneakyThrows;
 
 import java.io.InputStream;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -57,91 +56,89 @@ public class InitializedData {
     private void init() {
 
         requestContextController.activate();
-        User admin = User.builder()
-                .id(UUID.fromString("c4804e0f-769e-4ab9-9ebe-0578fb4f00a6"))
-                .login("admin")
-                .name("System")
-                .surname("Admin")
-                .birthday(LocalDate.of(1990, 10, 21))
-                .email("admin@simple-notes.example.com")
-                .password("adminadmin")
-                .role(List.of(UserRole.ADMIN, UserRole.USER))
-                .build();
+        if (userService.find("admin").isEmpty()) {
+            User admin = User.builder()
+                    .id(UUID.fromString("c4804e0f-769e-4ab9-9ebe-0578fb4f00a6"))
+                    .login("admin")
+                    .name("System")
+                    .surname("Admin")
+                    .birthday(LocalDate.of(1990, 10, 21))
+                    .email("admin@simple-notes.example.com")
+                    .password("adminadmin")
+                    .role(List.of(UserRole.ADMIN, UserRole.USER))
+                    .build();
 
-        User kevin = User.builder()
-                .id(UUID.fromString("81e1c2a9-7f57-439b-b53d-6db88b071e4e"))
-                .login("kevin")
-                .name("Kevin")
-                .surname("Pear")
-                .birthday(LocalDate.of(2001, 1, 16))
-                .email("kevin@example.com")
-                .password("useruser")
-                .role(List.of(UserRole.USER))
-                .build();
+            User kevin = User.builder()
+                    .id(UUID.fromString("81e1c2a9-7f57-439b-b53d-6db88b071e4e"))
+                    .login("kevin")
+                    .name("Kevin")
+                    .surname("Pear")
+                    .birthday(LocalDate.of(2001, 1, 16))
+                    .email("kevin@example.com")
+                    .password("useruser")
+                    .role(List.of(UserRole.USER))
+                    .build();
 
-        User alice = User.builder()
-                .id(UUID.fromString("ed6cfb2a-cad7-47dd-9b56-9d1e3c7a4197"))
-                .login("alice")
-                .name("Alice")
-                .surname("Grape")
-                .birthday(LocalDate.of(2002, 3, 19))
-                .email("alice@example.com")
-                .password("useruser")
-                .role(List.of(UserRole.USER))
-                .build();
+            User alice = User.builder()
+                    .id(UUID.fromString("ed6cfb2a-cad7-47dd-9b56-9d1e3c7a4197"))
+                    .login("alice")
+                    .name("Alice")
+                    .surname("Grape")
+                    .birthday(LocalDate.of(2002, 3, 19))
+                    .email("alice@example.com")
+                    .password("useruser")
+                    .role(List.of(UserRole.USER))
+                    .build();
 
-        User student = User.builder()
-                .id(UUID.randomUUID())
-                .login("student")
-                .name("Student")
-                .surname("Studencki")
-                .birthday(LocalDate.now())
-                .email("student@example.com")
-                .password("piwopiwo")
-                .role(List.of(UserRole.USER))
-                .build();
+            User student = User.builder()
+                    .id(UUID.randomUUID())
+                    .login("student")
+                    .name("Student")
+                    .surname("Studencki")
+                    .birthday(LocalDate.now())
+                    .email("student@example.com")
+                    .password("piwopiwo")
+                    .role(List.of(UserRole.USER))
+                    .build();
 
-        userService.create(admin);
-        userService.create(kevin);
-        userService.create(alice);
-        userService.create(student);
+            userService.create(admin);
+            userService.create(kevin);
+            userService.create(alice);
+            userService.create(student);
 
-        Note note1 = Note.builder()
-                .id(UUID.fromString("a99c3ee1-d399-4b13-a72a-f24458d590a0"))
-                .title("First Note")
-                .user(kevin)
-                .content("This is Kevin's note")
-                .build();
+            NoteThread thread1 = NoteThread.builder()
+                    .id(UUID.fromString("a97c3ee1-d399-4b13-a72a-f24458d590a0"))
+                    .title("Side Note")
+                    .importance(Importance.LOW)
+                    .build();
+            NoteThread thread2 = NoteThread.builder()
+                    .id(UUID.fromString("a97c3ee1-d399-4b13-a72a-f24458d590a1"))
+                    .title("Important Chore Note")
+                    .importance(Importance.HIGH)
+                    .build();
 
-        Note note2 = Note.builder()
-                .id(UUID.fromString("a99c3ee1-d399-4b13-a72a-f24458d590a1"))
-                .title("Alice's Note")
-                .user(alice)
-                .content("This is Alice's note. Hi, I am Alice.")
-                .build();
+            noteThreadService.createNoteThread(thread1);
+            noteThreadService.createNoteThread(thread2);
 
-        NoteThread thread1 = NoteThread.builder()
-                .id(UUID.fromString("a97c3ee1-d399-4b13-a72a-f24458d590a0"))
-                .title("Side Note")
-                .importance(Importance.LOW)
-                .build();
-        NoteThread thread2 = NoteThread.builder()
-                .id(UUID.fromString("a97c3ee1-d399-4b13-a72a-f24458d590a1"))
-                .title("Important Chore Note")
-                .importance(Importance.HIGH)
-                .build();
+            Note note1 = Note.builder()
+                    .id(UUID.fromString("a99c3ee1-d399-4b13-a72a-f24458d590a0"))
+                    .title("First Note")
+                    .user(kevin)
+                    .content("This is Kevin's note")
+                    .noteThread(thread1)
+                    .build();
 
-        note1.setNoteThread(thread1);
-        note2.setNoteThread(thread2);
-        thread1.setNotes(new ArrayList<>(List.of(note1)));
-        thread2.setNotes(new ArrayList<>(List.of(note2)));
+            Note note2 = Note.builder()
+                    .id(UUID.fromString("a99c3ee1-d399-4b13-a72a-f24458d590a1"))
+                    .title("Alice's Note")
+                    .user(alice)
+                    .content("This is Alice's note. Hi, I am Alice.")
+                    .noteThread(thread2)
+                    .build();
 
-        noteThreadService.createNoteThread(thread1);
-        noteThreadService.createNoteThread(thread2);
-
-        noteService.createNote(note1);
-        noteService.createNote(note2);
-
+            noteService.createNote(note1);
+            noteService.createNote(note2);
+        }
         requestContextController.deactivate();
     }
 

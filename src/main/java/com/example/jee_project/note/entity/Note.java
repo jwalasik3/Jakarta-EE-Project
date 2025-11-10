@@ -1,6 +1,7 @@
 package com.example.jee_project.note.entity;
 
 import com.example.jee_project.user.entity.User;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -14,14 +15,18 @@ import java.util.UUID;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @ToString
 @EqualsAndHashCode
+@Entity
+@Table(name = "notes")
 public class Note implements Serializable {
 
+    @Id
     private UUID id;
     private String title;
     private String content;
-    @EqualsAndHashCode.Exclude
+    @ManyToOne
+    @JoinColumn(name = "user_login")
     private User user;
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
+    @ManyToOne
+    @JoinColumn(name = "noteThread")
     private NoteThread noteThread;
 }

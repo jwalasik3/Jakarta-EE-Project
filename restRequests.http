@@ -8,7 +8,7 @@ GET {{host}}/threads
 Accept: application/json
 
 ### Get a single note thread
-GET {{host}}/threads/{{newThreadId}}
+GET {{host}}/threads/{{threadId}}
 Accept: application/json
 
 ### Create a note thread (PUT)
@@ -21,7 +21,7 @@ Content-Type: application/json
 }
 
 ### Update a note thread (PATCH)
-PATCH {{host}}/threads/{{threadId}}
+PATCH {{host}}/threads/{{newThreadId}}
 Content-Type: application/json
 
 {
@@ -29,7 +29,7 @@ Content-Type: application/json
 }
 
 ### Delete a note thread
-DELETE {{host}}/threads/{{threadId}}
+DELETE {{host}}/threads/{{newThreadId}}
 
 
 ### Get all notes

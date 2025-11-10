@@ -6,6 +6,7 @@ import com.example.jee_project.user.repository.api.UserRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.servlet.ServletContext;
+import jakarta.transaction.Transactional;
 import lombok.NoArgsConstructor;
 
 import java.io.File;
@@ -56,6 +57,7 @@ public class UserService {
         return repository.findByLogin(login);
     }
 
+    @Transactional
     public void create(User user) {
 
         user.setPassword(passwordHash.generate(user.getPassword().toCharArray()));
@@ -69,6 +71,7 @@ public class UserService {
                 .orElse(false);
     }
 
+    @Transactional
     public void updateAvatar(UUID id, InputStream is) {
 
         repository.find(id).ifPresent(user -> {
@@ -89,6 +92,7 @@ public class UserService {
         });
     }
 
+    @Transactional
     public void deleteAvatar(UUID id) {
 
         Path avatarPath = Paths.get(avatarStore, id + ".png");
