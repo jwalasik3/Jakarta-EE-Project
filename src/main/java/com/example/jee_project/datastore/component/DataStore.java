@@ -121,7 +121,7 @@ public class DataStore {
     public synchronized void createNote(Note value) throws IllegalArgumentException {
 
         if (notes.stream().anyMatch(note -> note.getId().equals(value.getId()))) {
-            throw new IllegalArgumentException("The character id \"%s\" is not unique".formatted(value.getId()));
+            throw new IllegalArgumentException("The note id \"%s\" is not unique".formatted(value.getId()));
         }
         Note entity = cloneWithRelationships(value);
         notes.add(entity);

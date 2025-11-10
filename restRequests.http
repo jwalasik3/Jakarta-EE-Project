@@ -8,7 +8,7 @@ GET {{host}}/threads
 Accept: application/json
 
 ### Get a single note thread
-GET {{host}}/threads/{{threadId}}
+GET {{host}}/threads/{{newThreadId}}
 Accept: application/json
 
 ### Create a note thread (PUT)
@@ -17,7 +17,7 @@ Content-Type: application/json
 
 {
   "title": "Przykładowy wątek",
-  "description": "Opis wątku (opcjonalny)"
+  "importance": "HIGH"
 }
 
 ### Update a note thread (PATCH)
@@ -41,11 +41,11 @@ GET {{host}}/threads/{{threadId}}/notes
 Accept: application/json
 
 ### Get a single note
-GET {{host}}/notes/{{noteId}}
+GET {{host}}/notes/{{newNoteId}}
 Accept: application/json
 
 ### Create a note in a thread (PUT)
-PUT {{host}}/threads/{{threadId}}/notes/{{newNoteId}}
+PUT {{host}}/threads/{{newThreadId}}/notes/{{newNoteId}}
 Content-Type: application/json
 
 {
@@ -54,7 +54,7 @@ Content-Type: application/json
 }
 
 ### Patch a note in a thread (PATCH)
-PATCH {{host}}/threads/{{threadId}}/notes/{{noteId}}
+PATCH {{host}}/threads/{{newThreadId}}/notes/{{newNoteId}}
 Content-Type: application/json
 
 {
@@ -62,4 +62,4 @@ Content-Type: application/json
 }
 
 ### Delete a note
-DELETE {{host}}/notes/{{noteId}}
+DELETE {{host}}/notes/{{newNoteId}}
