@@ -5,6 +5,7 @@ import com.example.jee_project.note.model.NoteCreateModel;
 import com.example.jee_project.note.model.ThreadModel;
 import com.example.jee_project.note.service.NoteService;
 import com.example.jee_project.note.service.NoteThreadService;
+import jakarta.ejb.EJB;
 import jakarta.enterprise.context.Conversation;
 import jakarta.enterprise.context.ConversationScoped;
 import jakarta.inject.Inject;
@@ -28,29 +29,33 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(force = true)
 public class NoteCreate implements Serializable {
 
-    private final NoteService noteService;
-    private final NoteThreadService noteThreadService;
     private final ModelFunctionFactory factory;
-
+    private final Conversation conversation;
+    private NoteService noteService;
+    private NoteThreadService noteThreadService;
     @Getter
     private NoteCreateModel note;
     @Getter
     private List<ThreadModel> threads;
 
-    private final Conversation conversation;
-
     @Inject
     public NoteCreate(
-            NoteService noteService,
-            NoteThreadService noteThreadService,
             ModelFunctionFactory factory,
             Conversation conversation
     ) {
 
-        this.noteService = noteService;
         this.factory = factory;
-        this.noteThreadService = noteThreadService;
         this.conversation = conversation;
+    }
+
+    @EJB
+    public void setNoteService(NoteService noteService) {
+        this.noteService = noteService;
+    }
+
+    @EJB
+    public void setNoteThreadService(NoteThreadService noteThreadService) {
+        this.noteThreadService = noteThreadService;
     }
 
     public void init() {

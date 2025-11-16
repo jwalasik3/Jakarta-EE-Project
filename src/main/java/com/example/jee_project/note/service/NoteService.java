@@ -4,27 +4,38 @@ import com.example.jee_project.note.entity.Note;
 import com.example.jee_project.note.entity.NoteThread;
 import com.example.jee_project.note.repository.api.NoteRepository;
 import com.example.jee_project.note.repository.api.NoteThreadRepository;
-import jakarta.enterprise.context.ApplicationScoped;
+import com.example.jee_project.user.entity.User;
+import com.example.jee_project.user.entity.UserRole;
+import com.example.jee_project.user.repository.api.UserRepository;
+import jakarta.ejb.EJBAccessException;
+import jakarta.ejb.LocalBean;
+import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
+import jakarta.security.enterprise.SecurityContext;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@ApplicationScoped
+@LocalBean
+@Stateless
 @NoArgsConstructor(force = true)
 public class NoteService {
 
     private final NoteRepository repository;
+    private final UserRepository userRepository;
     private final NoteThreadRepository threadRepository;
+    private final SecurityContext securityContext;
 
     @Inject
-    public NoteService(NoteRepository repository, NoteThreadRepository threadRepository) {
+    public NoteService(NoteRepository repository, UserRepository userRepository,
+                       NoteThreadRepository threadRepository, SecurityContext securityContext) {
 
         this.repository = repository;
+        this.userRepository = userRepository;
         this.threadRepository = threadRepository;
+        this.securityContext = securityContext;
     }
 
     public Optional<Note> getNote(UUID id) {
@@ -37,6 +48,16 @@ public class NoteService {
         return repository.findAll();
     }
 
+    public List<Note> getNotesForCallerPrincipal() {
+
+        if (securityContext.isCallerInRole(UserRole.ADMIN)) {
+            return getAllNotes();
+        }
+
+        String username = securityContext.getCallerPrincipal().getName();
+        return repository.findAllByUsername(username);
+    }
+
     public List<Note> getAllNotesByThread(UUID threadId) {
 
         return repository.findAllByThread(threadId);
@@ -47,7 +68,15 @@ public class NoteService {
         return repository.findAll(userId);
     }
 
-    @Transactional
+    public void createNoteByCallerPrincipal(Note note) {
+
+        String username = securityContext.getCallerPrincipal().getName();
+        User user = userRepository.findByLogin(username)
+                .orElseThrow(() -> new IllegalArgumentException("User with username " + username + " does not exist"));
+        note.setUser(user);
+        createNote(note);
+    }
+
     public void createNote(Note note) {
 
         if (repository.find(note.getId()).isPresent()) {
@@ -65,11 +94,12 @@ public class NoteService {
         repository.create(note);
     }
 
-    @Transactional
     public void updateNote(Note note) {
 
         Note existing = repository.find(note.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Note with id " + note.getId() + " does not exist"));
+
+        checkAdminRoleOrOwner(repository.find(note.getId()));
 
         UUID oldThreadId = existing.getNoteThread() != null ? existing.getNoteThread().getId() : null;
         UUID newThreadId = note.getNoteThread() != null ? note.getNoteThread().getId() : null;
@@ -99,10 +129,10 @@ public class NoteService {
         existing.setUser(note.getUser());
     }
 
-    @Transactional
     public void deleteNote(UUID id) {
 
         Optional<Note> existing = repository.find(id);
+        checkAdminRoleOrOwner(existing);
         if (existing.isPresent()) {
             Note note = existing.get();
             if (note.getNoteThread() != null && note.getNoteThread().getId() != null) {
@@ -112,7 +142,19 @@ public class NoteService {
                 }
             }
         }
-
         repository.delete(id);
     }
+
+    private void checkAdminRoleOrOwner(Optional<Note> note) throws EJBAccessException {
+        if (securityContext.isCallerInRole(UserRole.ADMIN)) {
+            return;
+        }
+        if (securityContext.isCallerInRole(UserRole.USER)
+                && note.isPresent()
+                && note.get().getUser().getLogin().equals(securityContext.getCallerPrincipal().getName())) {
+            return;
+        }
+        throw new EJBAccessException("Caller not authorized.");
+    }
+
 }

@@ -2,7 +2,7 @@ package com.example.jee_project.note.repository.persistance;
 
 import com.example.jee_project.note.entity.NoteThread;
 import com.example.jee_project.note.repository.api.NoteThreadRepository;
-import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.Dependent;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@RequestScoped
+@Dependent
 public class NoteThreadPersistenceRepository implements NoteThreadRepository {
 
     private EntityManager em;

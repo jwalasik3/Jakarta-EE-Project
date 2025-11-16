@@ -36,3 +36,4 @@ public interface NoteThreadController {
     @Path("/threads/{id}")
     void deleteNoteThread(@PathParam("id") UUID id);
 }
+

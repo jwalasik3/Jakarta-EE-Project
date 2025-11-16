@@ -11,4 +11,6 @@ public interface NoteRepository extends Repository<Note, UUID> {
     List<Note> findAll(UUID userId);
 
     List<Note> findAllByThread(UUID threadId);
+
+    List<Note> findAllByUsername(String username);
 }

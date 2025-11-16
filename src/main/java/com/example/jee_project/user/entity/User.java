@@ -1,6 +1,5 @@
 package com.example.jee_project.user.entity;
 
-import com.example.jee_project.note.entity.Note;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,9 +32,5 @@ public class User implements Serializable {
     @CollectionTable(name = "users__roles", joinColumns = @JoinColumn(name = "id"))
     @Column(name = "role")
     @ElementCollection(fetch = FetchType.EAGER)
-    private List<UserRole> role;
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private List<Note> notes;
+    private List<String> role;
 }

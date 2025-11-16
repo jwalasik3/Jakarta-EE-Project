@@ -7,11 +7,15 @@ import com.example.jee_project.note.dto.GetNoteThreadsResponse;
 import com.example.jee_project.note.dto.PatchNoteThreadRequest;
 import com.example.jee_project.note.dto.PutNoteThreadRequest;
 import com.example.jee_project.note.service.NoteThreadService;
+import com.example.jee_project.user.entity.UserRole;
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.ejb.EJB;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 
@@ -20,26 +24,36 @@ import java.util.UUID;
 @Path("")
 public class NoteThreadRestController implements NoteThreadController {
 
-    private final NoteThreadService service;
+    private NoteThreadService service;
     private final DtoFunctionFactory factory;
     private final UriInfo uriInfo;
-    private final HttpServletResponse response;
+    private HttpServletResponse response;
 
-    @Inject
-    public NoteThreadRestController(NoteThreadService service, DtoFunctionFactory factory, UriInfo uriInfo, HttpServletResponse response) {
-
-        this.service = service;
-        this.factory = factory;
-        this.uriInfo = uriInfo;
+    @Context
+    public void setResponse(HttpServletResponse response) {
         this.response = response;
     }
 
+    @Inject
+    public NoteThreadRestController(DtoFunctionFactory factory, UriInfo uriInfo) {
+
+        this.factory = factory;
+        this.uriInfo = uriInfo;
+    }
+
+    @EJB
+    public void setService(NoteThreadService service) {
+        this.service = service;
+    }
+
+    @RolesAllowed(UserRole.USER)
     @Override
     public GetNoteThreadsResponse getNoteThreads() {
 
         return factory.noteThreadsToResponseFunction().apply(service.getNoteThreads());
     }
 
+    @RolesAllowed(UserRole.USER)
     @Override
     public GetNoteThreadResponse getNoteThread(UUID id) {
 
@@ -48,6 +62,7 @@ public class NoteThreadRestController implements NoteThreadController {
                 .orElseThrow(NotFoundException::new);
     }
 
+    @RolesAllowed(UserRole.ADMIN)
     @Override
     public void putNoteThread(UUID id, PutNoteThreadRequest request) {
 
@@ -60,6 +75,7 @@ public class NoteThreadRestController implements NoteThreadController {
 
     }
 
+    @RolesAllowed(UserRole.ADMIN)
     @Override
     public void patchNoteThread(UUID id, PatchNoteThreadRequest request) {
 
@@ -71,6 +87,7 @@ public class NoteThreadRestController implements NoteThreadController {
         );
     }
 
+    @RolesAllowed(UserRole.ADMIN)
     @Override
     public void deleteNoteThread(UUID id) {
 

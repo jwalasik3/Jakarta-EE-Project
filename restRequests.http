@@ -1,65 +1,124 @@
 @host = http://localhost:9080/simple-notes/api
 @threadId = a97c3ee1-d399-4b13-a72a-f24458d590a1
-@noteId = a99c3ee1-d399-4b13-a72a-f24458d590a1
+@noteId = a99c3ee1-d399-4b13-a72a-f24458d590a0
 @newThreadId = b12c3ee1-d399-4b13-a72a-f24458d590b1
 @newNoteId = a99c3ee1-d399-4b13-a72a-f24458d590a9
-### Get all note threads
-GET {{host}}/threads
-Accept: application/json
+@authToken = YWRtaW4tc2VydmljZTphZG1pbmFkbWlu
+@userAuthToken = a2V2aW46dXNlcnVzZXI=
+@newUserAuthToken = bmV3dXNlcjpuZXdwYXNzd29yZA==
 
-### Get a single note thread
+# Get a single note thread
+// @no-cookie-jar
 GET {{host}}/threads/{{threadId}}
 Accept: application/json
+Authorization: Basic {{newUserAuthToken}}
 
-### Create a note thread (PUT)
+###
+# Get all note threads
+// @no-cookie-jar
+GET {{host}}/threads
+Accept: application/json
+Authorization: Basic {{newUserAuthToken}}
+
+###
+# Create a note thread (PUT)
+// @no-cookie-jar
 PUT {{host}}/threads/{{newThreadId}}
 Content-Type: application/json
+Authorization: Basic {{authToken}}
 
 {
   "title": "Przykładowy wątek",
   "importance": "HIGH"
 }
 
-### Update a note thread (PATCH)
+###
+# Update a note thread (PATCH)
+// @no-cookie-jar
 PATCH {{host}}/threads/{{newThreadId}}
 Content-Type: application/json
+Authorization: Basic {{authToken}}
 
 {
   "title": "Zaktualizowany tytuł"
 }
 
-### Delete a note thread
+###
+# Delete a note thread
+// @no-cookie-jar
 DELETE {{host}}/threads/{{newThreadId}}
+Authorization: Basic {{authToken}}
 
 
-### Get all notes
+### NOTES
+
+# Get all notes
+// @no-cookie-jar
 GET {{host}}/notes
 Accept: application/json
+Authorization: Basic {{userAuthToken}}
 
-### Get notes for a specific thread
+###
+# Get notes for a specific thread
+// @no-cookie-jar
 GET {{host}}/threads/{{threadId}}/notes
 Accept: application/json
 
-### Get a single note
-GET {{host}}/notes/{{newNoteId}}
+###
+# Get a single note
+// @no-cookie-jar
+GET {{host}}/notes/{{noteId}}
 Accept: application/json
+Authorization: Basic {{newUserAuthToken}}
 
-### Create a note in a thread (PUT)
-PUT {{host}}/threads/{{newThreadId}}/notes/{{newNoteId}}
+###
+# Create a note in a thread (PUT)
+// @no-cookie-jar
+PUT {{host}}/threads/{{threadId}}/notes/{{newNoteId}}
 Content-Type: application/json
+Authorization: Basic {{userAuthToken}}
 
 {
   "title": "Nowy tytuł notatki",
   "content": "Treść notatki"
 }
 
-### Patch a note in a thread (PATCH)
-PATCH {{host}}/threads/{{newThreadId}}/notes/{{newNoteId}}
+###
+# Patch a note in a thread (PATCH)
+// @no-cookie-jar
+PATCH {{host}}/threads/{{threadId}}/notes/{{noteId}}
 Content-Type: application/json
+Authorization: Basic {{authToken}}
 
 {
   "content": "Zmieniona treść"
 }
 
-### Delete a note
-DELETE {{host}}/notes/{{newNoteId}}
+###
+# Delete a note
+// @no-cookie-jar
+DELETE {{host}}/notes/{{noteId}}
+Authorization: Basic {{authToken}}
+
+###
+# Create new user
+// @no-cookie-jar
+PUT {{host}}/users
+Content-Type: application/json
+
+{
+  "id": "111c3ee1-d399-4b13-a72a-f24458d590a1",
+  "login": "newuser",
+  "password": "newpassword",
+  "email": "newuser@gmail.com",
+  "name": "New",
+  "surname": "User",
+  "birthday": "1995-05-15"
+}
+
+###
+# Get all users
+// @no-cookie-jar
+GET {{host}}/users
+Accept: application/json
+Authorization: Basic {{authToken}}

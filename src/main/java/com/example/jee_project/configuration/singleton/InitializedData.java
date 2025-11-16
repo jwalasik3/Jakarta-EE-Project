@@ -1,4 +1,4 @@
-package com.example.jee_project.configuration.observer;
+package com.example.jee_project.configuration.singleton;
 
 import com.example.jee_project.note.entity.Importance;
 import com.example.jee_project.note.entity.Note;
@@ -8,11 +8,11 @@ import com.example.jee_project.note.service.NoteThreadService;
 import com.example.jee_project.user.entity.User;
 import com.example.jee_project.user.entity.UserRole;
 import com.example.jee_project.user.service.UserService;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.context.Initialized;
-import jakarta.enterprise.context.control.RequestContextController;
-import jakarta.enterprise.event.Observes;
-import jakarta.inject.Inject;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.security.DeclareRoles;
+import jakarta.annotation.security.RunAs;
+import jakarta.ejb.*;
+import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 
 import java.io.InputStream;
@@ -20,42 +20,38 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
-@ApplicationScoped
+@Singleton
+@Startup
+@TransactionAttribute(value = TransactionAttributeType.NOT_SUPPORTED)
+@DependsOn("InitializeAdminService")
+@DeclareRoles({UserRole.ADMIN, UserRole.USER})
+@RunAs(UserRole.ADMIN)
+@NoArgsConstructor
 public class InitializedData {
 
-    private final UserService userService;
-    private final NoteService noteService;
-    private final NoteThreadService noteThreadService;
-    private final RequestContextController requestContextController;
+    private UserService userService;
+    private NoteService noteService;
+    private NoteThreadService noteThreadService;
 
-    @Inject
-    public InitializedData(
-            UserService userService,
-            NoteService noteService,
-            NoteThreadService noteThreadService,
-            RequestContextController requestContextController
-    ) {
-
+    @EJB
+    public void setUserService(UserService userService) {
         this.userService = userService;
+    }
+
+    @EJB
+    public void setNoteService(NoteService noteService) {
         this.noteService = noteService;
+    }
+
+    @EJB
+    public void setNoteThreadService(NoteThreadService noteThreadService) {
         this.noteThreadService = noteThreadService;
-        this.requestContextController = requestContextController;
     }
 
-    public void contextInitialized(@Observes @Initialized(ApplicationScoped.class) Object init) {
-
-        init();
-    }
-
-
-    /**
-     * Initializes database with some example values. Should be called after creating this object. This object should be
-     * created only once.
-     */
+    @PostConstruct
     @SneakyThrows
     private void init() {
 
-        requestContextController.activate();
         if (userService.find("admin").isEmpty()) {
             User admin = User.builder()
                     .id(UUID.fromString("c4804e0f-769e-4ab9-9ebe-0578fb4f00a6"))
@@ -139,7 +135,6 @@ public class InitializedData {
             noteService.createNote(note1);
             noteService.createNote(note2);
         }
-        requestContextController.deactivate();
     }
 
     /**
@@ -159,4 +154,3 @@ public class InitializedData {
     }
 
 }
-

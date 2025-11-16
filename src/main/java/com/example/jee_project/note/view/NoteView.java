@@ -7,6 +7,7 @@ import com.example.jee_project.note.model.NoteModel;
 import com.example.jee_project.note.model.ThreadModel;
 import com.example.jee_project.note.service.NoteService;
 import com.example.jee_project.note.service.NoteThreadService;
+import jakarta.ejb.EJB;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
@@ -24,7 +25,7 @@ import java.util.UUID;
 @Named
 public class NoteView implements Serializable {
 
-    private final NoteService service;
+    private NoteService service;
     private final ModelFunctionFactory factory;
 
     @Setter
@@ -35,10 +36,14 @@ public class NoteView implements Serializable {
     private NoteModel note;
 
     @Inject
-    public NoteView(NoteService service, ModelFunctionFactory factory) {
+    public NoteView(ModelFunctionFactory factory) {
 
-        this.service = service;
         this.factory = factory;
+    }
+
+    @EJB
+    public void setService(NoteService service) {
+        this.service = service;
     }
 
     public void init() throws IOException {

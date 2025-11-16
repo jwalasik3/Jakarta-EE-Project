@@ -7,6 +7,7 @@ import com.example.jee_project.note.model.NoteEditModel;
 import com.example.jee_project.note.model.ThreadModel;
 import com.example.jee_project.note.service.NoteService;
 import com.example.jee_project.note.service.NoteThreadService;
+import jakarta.ejb.EJB;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
@@ -26,8 +27,8 @@ import java.util.stream.Collectors;
 @Named
 public class NoteEdit implements Serializable {
 
-    private final NoteService service;
-    private final NoteThreadService threadService;
+    private NoteService service;
+    private NoteThreadService threadService;
     private final ModelFunctionFactory factory;
 
     @Setter
@@ -41,10 +42,18 @@ public class NoteEdit implements Serializable {
     private List<ThreadModel> threads;
 
     @Inject
-    public NoteEdit(NoteService service, NoteThreadService threadService, ModelFunctionFactory factory) {
-        this.service = service;
-        this.threadService = threadService;
+    public NoteEdit(ModelFunctionFactory factory) {
         this.factory = factory;
+    }
+
+    @EJB
+    public void setService(NoteService service) {
+        this.service = service;
+    }
+
+    @EJB
+    public void setThreadService(NoteThreadService threadService) {
+        this.threadService = threadService;
     }
 
     public void init() throws IOException {

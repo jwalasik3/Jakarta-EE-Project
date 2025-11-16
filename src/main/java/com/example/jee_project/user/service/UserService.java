@@ -1,12 +1,17 @@
 package com.example.jee_project.user.service;
 
-import com.example.jee_project.crypto.component.Pbkdf2PasswordHash;
 import com.example.jee_project.user.entity.User;
+import com.example.jee_project.user.entity.UserRole;
 import com.example.jee_project.user.repository.api.UserRepository;
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.ejb.LocalBean;
+import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
+import jakarta.security.enterprise.identitystore.Pbkdf2PasswordHash;
 import jakarta.servlet.ServletContext;
-import jakarta.transaction.Transactional;
+import jakarta.ws.rs.core.Context;
 import lombok.NoArgsConstructor;
 
 import java.io.File;
@@ -21,46 +26,64 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@ApplicationScoped
+@LocalBean
+@Stateless
 @NoArgsConstructor(force = true)
 public class UserService {
 
     private final UserRepository repository;
     private final Pbkdf2PasswordHash passwordHash;
-    private final ServletContext context;
-    private final String avatarStore;
+    @Context
+    private ServletContext context;
+    private String avatarStore;
 
     @Inject
-    public UserService(UserRepository repository, Pbkdf2PasswordHash passwordHash, ServletContext context) {
+    public UserService(UserRepository repository, Pbkdf2PasswordHash passwordHash) {
 
         this.repository = repository;
         this.passwordHash = passwordHash;
-        this.context = context;
-        String avatarStore = this.context.getInitParameter("AVATAR_STORE");
-        this.avatarStore = avatarStore.endsWith(File.separator)
-                ? avatarStore
-                : avatarStore + File.separator;
     }
 
+    @PostConstruct
+    private void init() {
+        String configured = null;
+        try {
+            configured = (context != null) ? context.getInitParameter("AVATAR_STORE") : null;
+        } catch (Throwable ignored) {
+            configured = null;
+        }
+        if (configured == null || configured.isBlank()) {
+            String tmp = System.getProperty("java.io.tmpdir", ".");
+            configured = tmp.endsWith(File.separator) ? tmp + "avatars" + File.separator : tmp + File.separator + "avatars" + File.separator;
+        } else {
+            configured = configured.endsWith(File.separator) ? configured : configured + File.separator;
+        }
+        this.avatarStore = configured;
+    }
+
+    @RolesAllowed(UserRole.ADMIN)
     public List<User> findAll() {
 
         return repository.findAll();
     }
 
+    @RolesAllowed(UserRole.ADMIN)
     public Optional<User> find(UUID id) {
 
         return repository.find(id);
     }
 
+    @RolesAllowed(UserRole.ADMIN)
     public Optional<User> find(String login) {
 
         return repository.findByLogin(login);
     }
 
-    @Transactional
+    @PermitAll
     public void create(User user) {
 
         user.setPassword(passwordHash.generate(user.getPassword().toCharArray()));
+        user.setRole(List.of(UserRole.USER));
         repository.create(user);
     }
 
@@ -71,7 +94,7 @@ public class UserService {
                 .orElse(false);
     }
 
-    @Transactional
+    @RolesAllowed(UserRole.USER)
     public void updateAvatar(UUID id, InputStream is) {
 
         repository.find(id).ifPresent(user -> {
@@ -92,7 +115,7 @@ public class UserService {
         });
     }
 
-    @Transactional
+    @RolesAllowed(UserRole.USER)
     public void deleteAvatar(UUID id) {
 
         Path avatarPath = Paths.get(avatarStore, id + ".png");
@@ -109,6 +132,7 @@ public class UserService {
         }
     }
 
+    @RolesAllowed(UserRole.USER)
     public byte[] findUserAvatar(UUID id) {
 
         Path avatarPath = Paths.get(avatarStore, id + ".png");

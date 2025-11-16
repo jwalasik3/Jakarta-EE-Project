@@ -2,16 +2,19 @@ package com.example.jee_project.note.service;
 
 import com.example.jee_project.note.entity.NoteThread;
 import com.example.jee_project.note.repository.api.NoteThreadRepository;
-import jakarta.enterprise.context.ApplicationScoped;
+import com.example.jee_project.user.entity.UserRole;
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.ejb.LocalBean;
+import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@ApplicationScoped
+@LocalBean
+@Stateless
 @NoArgsConstructor(force = true)
 public class NoteThreadService {
 
@@ -28,24 +31,22 @@ public class NoteThreadService {
         return repository.find(id);
     }
 
+    @RolesAllowed(UserRole.USER)
     public List<NoteThread> getNoteThreads() {
 
         return repository.findAll();
     }
 
-    @Transactional
     public void createNoteThread(NoteThread entity) {
 
         repository.create(entity);
     }
 
-    @Transactional
     public void updateNoteThread(NoteThread entity) {
 
         repository.update(entity);
     }
 
-    @Transactional
     public void deleteNoteThread(UUID id) {
 
         repository.delete(id);

@@ -7,47 +7,66 @@ import com.example.jee_project.note.dto.GetNotesResponse;
 import com.example.jee_project.note.dto.PatchNoteRequest;
 import com.example.jee_project.note.dto.PutNoteRequest;
 import com.example.jee_project.note.service.NoteService;
+import com.example.jee_project.user.entity.UserRole;
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.ejb.EJB;
+import jakarta.ejb.EJBAccessException;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.ws.rs.ForbiddenException;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
+import lombok.extern.java.Log;
 
 import java.util.UUID;
+import java.util.logging.Level;
 
 @Path("")
+@Log
+@RolesAllowed(UserRole.USER)
 public class NoteRestController implements NoteController {
 
-    private final NoteService service;
+    private NoteService service;
     private final DtoFunctionFactory factory;
     private final UriInfo uriInfo;
-    private final HttpServletResponse response;
+    private HttpServletResponse response;
 
-    @Inject
-    public NoteRestController(NoteService service, DtoFunctionFactory factory,
-                              @SuppressWarnings("CdiInjectionPointsInspection") UriInfo uriInfo,
-                              HttpServletResponse response) {
-
-        this.service = service;
-        this.factory = factory;
-        this.uriInfo = uriInfo;
+    @Context
+    public void setResponse(HttpServletResponse response) {
         this.response = response;
     }
 
+    @Inject
+    public NoteRestController(DtoFunctionFactory factory, @SuppressWarnings("CdiInjectionPointsInspection") UriInfo uriInfo) {
+
+        this.factory = factory;
+        this.uriInfo = uriInfo;
+    }
+
+    @EJB
+    public void setService(NoteService service) {
+        this.service = service;
+    }
+
+    @RolesAllowed({ UserRole.USER, UserRole.ADMIN })
     @Override
     public GetNotesResponse getNotes() {
 
-        return factory.notesToResponseFunction().apply(service.getAllNotes());
+        return factory.notesToResponseFunction().apply(service.getNotesForCallerPrincipal());
     }
 
+    @RolesAllowed(UserRole.ADMIN)
     @Override
     public GetNotesResponse getThreadsNotes(UUID id) {
 
         return factory.notesToResponseFunction().apply(service.getAllNotesByThread(id));
     }
 
+    @RolesAllowed(UserRole.USER)
     @Override
     public GetNoteResponse getNote(UUID id) {
 
@@ -55,10 +74,11 @@ public class NoteRestController implements NoteController {
                 .orElseThrow(NotFoundException::new);
     }
 
+    @RolesAllowed({ UserRole.USER, UserRole.ADMIN })
     @Override
     public void putNote(UUID threadId, UUID noteId, PutNoteRequest request) {
 
-        service.createNote(factory.requestToNoteFunction().apply(threadId, noteId, request));
+        service.createNoteByCallerPrincipal(factory.requestToNoteFunction().apply(threadId, noteId, request));
         response.setHeader("Location", uriInfo.getBaseUriBuilder()
                 .path(NoteController.class, "getNote")
                 .build(noteId)
@@ -66,22 +86,38 @@ public class NoteRestController implements NoteController {
         throw new WebApplicationException(Response.Status.CREATED);
     }
 
+    @RolesAllowed({ UserRole.USER, UserRole.ADMIN })
     @Override
     public void patchNote(UUID threadId, UUID noteId, PatchNoteRequest request) {
 
         service.getNote(noteId).ifPresentOrElse(
-                entity -> service.updateNote(factory.updateNote().apply(entity, threadId, request)),
+                entity -> {
+                    try {
+                        service.updateNote(factory.updateNote().apply(entity, threadId, request));
+                    } catch (EJBAccessException e) {
+                        log.log(Level.WARNING, e.getMessage(), e);
+                        throw new ForbiddenException();
+                    }
+                },
                 () -> {
                     throw new NotFoundException();
                 }
         );
     }
 
+    @RolesAllowed({ UserRole.USER, UserRole.ADMIN })
     @Override
     public void deleteNote(UUID id) {
 
         service.getNote(id).ifPresentOrElse(
-                entity -> service.deleteNote(id),
+                entity -> {
+                    try {
+                        service.deleteNote(id);
+                    } catch (EJBAccessException e) {
+                        log.log(Level.WARNING, e.getMessage(), e);
+                        throw new ForbiddenException();
+                    }
+                },
                 () -> {
                     throw new NotFoundException();
                 }

@@ -2,7 +2,7 @@ package com.example.jee_project.note.repository.persistance;
 
 import com.example.jee_project.note.entity.Note;
 import com.example.jee_project.note.repository.api.NoteRepository;
-import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.Dependent;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@RequestScoped
+@Dependent
 public class NotePersistenceRepository implements NoteRepository {
 
     private EntityManager em;
@@ -38,6 +38,13 @@ public class NotePersistenceRepository implements NoteRepository {
 
         return em.createQuery("SELECT n FROM Note n WHERE n.noteThread.id = :threadId", Note.class)
                 .setParameter("threadId", threadId)
+                .getResultList();
+    }
+
+    @Override
+    public List<Note> findAllByUsername(String username) {
+        return em.createQuery("SELECT n FROM Note n WHERE n.user.login = :username", Note.class)
+                .setParameter("username", username)
                 .getResultList();
     }
 
