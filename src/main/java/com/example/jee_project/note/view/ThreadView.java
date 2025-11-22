@@ -43,7 +43,7 @@ public class ThreadView implements Serializable {
 
     public void init() throws IOException {
 
-        Optional<NoteThread> noteThread = service.getNoteThread(UUID.fromString(id));
+        Optional<NoteThread> noteThread = service.getNoteThreadForCallerPrincipal(UUID.fromString(id));
         if (noteThread.isPresent()) {
 
             this.noteThread = this.factory.threadToModel().apply(noteThread.get());

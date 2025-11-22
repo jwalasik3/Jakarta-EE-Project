@@ -83,10 +83,13 @@ public class UserService {
     public void create(User user) {
 
         user.setPassword(passwordHash.generate(user.getPassword().toCharArray()));
-        user.setRole(List.of(UserRole.USER));
+        if (user.getRole() == null || user.getRole().isEmpty()) {
+            user.setRole(List.of(UserRole.USER));
+        }
         repository.create(user);
     }
 
+    @PermitAll
     public boolean verify(String login, String password) {
 
         return find(login)

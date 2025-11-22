@@ -94,7 +94,7 @@ public class NoteCreate implements Serializable {
 
     public String saveAction() {
 
-        noteService.createNote(factory.modelToNote().apply(note));
+        noteService.createNoteByCallerPrincipal(factory.modelToNote().apply(note));
         conversation.end();
         return "/threads/note_thread_list.xhtml?faces-redirect=true";
     }

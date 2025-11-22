@@ -23,19 +23,29 @@
     <h:body>
         <div class="container">
             <header class="mb-4 mt-4">
-                <h:graphicImage name="images/icon.png" class="w-1" />
+                <h:graphicImage name="images/icon_#{facesContext.viewRoot.locale.language}.png" class="w-1" />
                 <h1>Simple Notes</h1>
+                <h:form styleClass="container d-flex  align-items-center justify-content-end"
+                        rendered="#{facesContext.externalContext.userPrincipal != null}">
+                    <h:outputText value="#{translation.get('login')} #{facesContext.externalContext.userPrincipal.name}"/>
+                    <h:commandButton styleClass="btn btn-link" value="#{translation.get('logout')}"
+                                     action="#{userLogout.logoutAction()}"/>
+                </h:form>
+
             </header>
 
             <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
                 <div class="container-fluid">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <h:link styleClass="nav-link" outcome="/index.xhtml">Home</h:link>
+                            <h:link styleClass="nav-link" outcome="/index.xhtml">
+                                <h:outputText value="#{translation.get('home')}" />
+                            </h:link>
                         </li>
                         <li class="nav-item">
-                            <h:link styleClass="nav-link"
-                                    outcome="/threads/note_thread_list.xhtml">Threads</h:link>
+                            <h:link styleClass="nav-link" outcome="/threads/note_thread_list.xhtml">
+                                <h:outputText value="#{translation.get('threads')}" />
+                            </h:link>
                         </li>
                     </ul>
                 </div>

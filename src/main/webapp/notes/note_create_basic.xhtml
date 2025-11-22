@@ -11,14 +11,14 @@
 
     <ui:define name="content">
         <article>
-            <header><h2>Create note - basic information</h2></header>
+            <header><h2>#{translation.get('create.note.basic')}</h2></header>
             <h:form styleClass="container" onreset="onReset()" enctype="multipart/form-data">
                 <div class="row">
                     <div class="col-2 p-2 text-center">
-                        <h:button styleClass="btn" value="Previous" disabled="true"/>
+                        <h:button styleClass="btn" value="#{translation.get('previous')}" disabled="true"/>
                     </div>
                     <div class="col-2 p-2 text-center">
-                        <h:commandButton styleClass="btn" value="Next"
+                        <h:commandButton styleClass="btn" value="#{translation.get('next')}"
                                          action="#{noteCreate.goToThreadAction()}"/>
                     </div>
                 </div>
@@ -26,7 +26,7 @@
                     <div class="col-4 p-2">
                         <div class="form-outline">
                             <h:inputText id="title" value="#{noteCreate.note.title}" styleClass="form-control"/>
-                            <h:outputLabel for="title" value="Title:" styleClass="form-label"/>
+                            <h:outputLabel for="title" value="#{translation.get('title')}:" styleClass="form-label"/>
                         </div>
                     </div>
                 </div>
@@ -35,7 +35,7 @@
                     <div class="col-4 p-2">
                         <div class="form-outline">
                             <h:inputText id="content" value="#{noteCreate.note.content}" styleClass="form-control"/>
-                            <h:outputLabel for="content" value="Content:" styleClass="form-label"/>
+                            <h:outputLabel for="content" value="#{translation.get('content')}:" styleClass="form-label"/>
                         </div>
                     </div>
                 </div>

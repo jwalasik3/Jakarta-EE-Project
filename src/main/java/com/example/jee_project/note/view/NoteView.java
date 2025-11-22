@@ -48,7 +48,7 @@ public class NoteView implements Serializable {
 
     public void init() throws IOException {
 
-        Optional<Note> note = service.getNote(UUID.fromString(id));
+        Optional<Note> note = service.getNoteByCallerPrincipal(UUID.fromString(id));
         if (note.isPresent()) {
 
             this.note = this.factory.noteToModel().apply(note.get());

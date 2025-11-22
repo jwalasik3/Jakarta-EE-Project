@@ -1,6 +1,7 @@
 package com.example.jee_project.note.model;
 
 import com.example.jee_project.note.entity.NoteThread;
+import com.example.jee_project.user.entity.User;
 import lombok.*;
 
 @Getter

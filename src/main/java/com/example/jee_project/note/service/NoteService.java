@@ -43,6 +43,29 @@ public class NoteService {
         return repository.find(id);
     }
 
+    public Optional<Note> getNoteByCallerPrincipal(UUID id) {
+
+        Optional<Note> result = repository.find(id);
+
+        if (result.isEmpty()) {
+            return result;
+        }
+
+        Note note = result.get();
+
+        if (securityContext.isCallerInRole(UserRole.ADMIN)) {
+            return Optional.of(note);
+        }
+
+        String username = securityContext.getCallerPrincipal().getName();
+
+        if (note.getUser().getLogin().equals(username)) {
+            return Optional.of(note);
+        }
+
+        return Optional.empty();
+    }
+
     public List<Note> getAllNotes() {
 
         return repository.findAll();
@@ -95,7 +118,6 @@ public class NoteService {
     }
 
     public void updateNote(Note note) {
-
         Note existing = repository.find(note.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Note with id " + note.getId() + " does not exist"));
 

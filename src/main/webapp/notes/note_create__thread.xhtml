@@ -11,15 +11,15 @@
 
     <ui:define name="content">
         <article>
-            <header><h2>Create note - basic information</h2></header>
+            <header><h2>#{translation.get('create.note.basic')}</h2></header>
             <h:form styleClass="container" onreset="onReset()" enctype="multipart/form-data">
                 <div class="row">
                     <div class="col-2 p-2 text-center">
-                        <h:commandButton styleClass="btn" value="Previous" immediate="true"
+                        <h:commandButton styleClass="btn" value="#{translation.get('previous')}" immediate="true"
                                          action="#{noteCreate.goToBasicAction()}"/>
                     </div>
                     <div class="col-2 p-2 text-center">
-                        <h:commandButton styleClass="btn" value="Confirm"
+                        <h:commandButton styleClass="btn" value="#{translation.get('confirm')}"
                                          action="#{noteCreate.saveAction()}"/>
                     </div>
                 </div>
@@ -27,9 +27,7 @@
                 <div class="row">
                     <div class="col-4 p-2">
                         <fieldset>
-                            <legend class="form-label fs-6">Thread:</legend>
-                            <!-- Instead of ui:repeat the h:selectOneRadio with f:selectItems can be used but then
-                            Faces renders table or list and custom styling with CSS libraties can be troublesome. -->
+                            <legend class="form-label fs-6">#{translation.get('thread')}:</legend>
                             <ui:repeat value="#{noteCreate.threads}" var="thread">
                                 <div class="form-check">
                                     <h:selectOneRadio id="radioId" group="thread"
@@ -46,7 +44,7 @@
 
                 <div class="row">
                     <div class="col-2 p-2 text-center">
-                        <h:commandButton styleClass="btn btn-secondary" value="Cancel"
+                        <h:commandButton styleClass="btn btn-secondary" value="#{translation.get('cancel')}"
                                          action="#{noteCreate.cancelAction()}"/>
                     </div>
                 </div>

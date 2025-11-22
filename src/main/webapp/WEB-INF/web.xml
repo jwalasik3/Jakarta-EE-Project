@@ -34,4 +34,34 @@
         <welcome-file>index.xhtml</welcome-file>
     </welcome-file-list>
 
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>note</web-resource-name>
+            <url-pattern>/notes/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>user</role-name>
+            <role-name>admin</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>thread</web-resource-name>
+            <url-pattern>/threads/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>user</role-name>
+            <role-name>admin</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <security-role>
+        <role-name>admin</role-name>
+    </security-role>
+
+    <security-role>
+        <role-name>user</role-name>
+    </security-role>
+
 </web-app>

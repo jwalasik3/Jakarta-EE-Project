@@ -1,6 +1,8 @@
 package com.example.jee_project.component;
 
 import com.example.jee_project.note.model.function.*;
+import com.example.jee_project.user.model.function.UserToModelFunction;
+import com.example.jee_project.user.model.function.UsersToModelFunction;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
@@ -35,4 +37,13 @@ public class ModelFunctionFactory {
 
         return new UpdateNoteWithModelFunction();
     }
+
+    public UserToModelFunction userToModel() {
+        return new UserToModelFunction();
+    }
+
+    public UsersToModelFunction usersToModel() {
+        return new UsersToModelFunction();
+    }
+
 }

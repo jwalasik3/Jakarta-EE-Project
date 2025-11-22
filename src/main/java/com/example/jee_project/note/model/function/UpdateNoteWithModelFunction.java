@@ -22,6 +22,7 @@ public class UpdateNoteWithModelFunction implements BiFunction<Note, NoteEditMod
                         .title(request.getThread().getTitle())
                         .importance(request.getThread().getImportance())
                         .build())
+                .user(entity.getUser())
                 .build();
     }
 }

@@ -58,7 +58,7 @@ public class NoteEdit implements Serializable {
 
     public void init() throws IOException {
         System.out.println("Wywołano init(), id: " + id);
-        Optional<Note> note = service.getNote(id);
+        Optional<Note> note = service.getNoteByCallerPrincipal(id);
         if (note.isPresent()) {
             this.note = factory.noteToEditModel().apply(note.get());
             threads = threadService.getNoteThreads().stream().map(factory.threadToModel()).collect(Collectors.toList());
