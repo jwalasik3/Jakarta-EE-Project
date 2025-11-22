@@ -31,41 +31,36 @@
                                 #{translation.get('notes')}:
                             </div>
                             <div class="col-6">
-                                <h:dataTable value="#{threadView.noteThread.notes}" var="note" id="notesTable"
-                                             styleClass="table align-middle mb-0 bg-white" headerClass="bg-light">
+                                <h:form id="notesForm">
+                                    <h:dataTable value="#{threadView.noteThread.notes}" var="note" id="notesTable"
+                                                 styleClass="table align-middle mb-0 bg-white" headerClass="bg-light">
 
-                                    <h:column>
-                                        <f:facet name="header">#{translation.get('title')}</f:facet>
-                                        <h:outputText value="#{note.title}"/>
-                                    </h:column>
+                                        <h:column>
+                                            <f:facet name="header">#{translation.get('title')}</f:facet>
+                                            <h:outputText value="#{note.title}"/>
+                                        </h:column>
 
-                                    <h:column>
-                                        <f:facet name="header">#{translation.get('view')}</f:facet>
-                                        <h:link outcome="/notes/note_view.xhtml" value="#{translation.get('view')}">
-                                            <f:param name="id" value="#{note.id}"/>
-                                        </h:link>
-                                    </h:column>
+                                        <h:column>
+                                            <f:facet name="header">#{translation.get('view')}</f:facet>
+                                            <h:link outcome="/notes/note_view.xhtml" value="#{translation.get('view')}">
+                                                <f:param name="id" value="#{note.id}"/>
+                                            </h:link>
+                                        </h:column>
 
-                                    <h:column>
-                                        <f:facet name="header">#{translation.get('edit')}</f:facet>
-                                        <h:link outcome="/notes/note_edit.xhtml" value="#{translation.get('edit')}">
-                                            <f:param name="id" value="#{note.id}"/>
-                                        </h:link>
-                                    </h:column>
-
-                                    <h:column>
-                                        <f:facet name="header">#{translation.get('delete')}</f:facet>
-                                        <h:form>
+                                        <h:column>
+                                            <f:facet name="header">#{translation.get('delete')}</f:facet>
                                             <h:commandButton styleClass="btn" value="#{translation.get('delete')}"
-                                                             action="#{threadView.deleteAction(note.id)}" />
-                                        </h:form>
-                                    </h:column>
+                                                             action="#{threadView.deleteAction(note.id)}">
+                                                <f:ajax execute="@this" render="notesTable"/>
+                                            </h:commandButton>
+                                        </h:column>
 
-                                    <f:facet name="footer">
-                                        <h:button styleClass="btn" outcome="/notes/note_create_basic.xhtml"
-                                                  value="#{translation.get('create')}"/>
-                                    </f:facet>
-                                </h:dataTable>
+                                        <f:facet name="footer">
+                                            <h:button styleClass="btn" outcome="/notes/note_create_basic.xhtml"
+                                                      value="#{translation.get('create')}"/>
+                                        </f:facet>
+                                    </h:dataTable>
+                                </h:form>
                             </div>
                         </div>
                     </div>

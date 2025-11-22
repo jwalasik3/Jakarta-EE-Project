@@ -1,5 +1,6 @@
 package com.example.jee_project.note.service;
 
+import com.example.jee_project.logging.annotation.LoggedOperation;
 import com.example.jee_project.note.entity.NoteThread;
 import com.example.jee_project.note.repository.api.NoteThreadRepository;
 import com.example.jee_project.user.entity.UserRole;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@LoggedOperation
 @LocalBean
 @Stateless
 @NoArgsConstructor(force = true)

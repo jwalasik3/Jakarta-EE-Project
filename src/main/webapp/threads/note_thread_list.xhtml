@@ -11,30 +11,32 @@
         <article class="text--justified">
             <header><h2>#{translation.get('threads')}</h2></header>
 
-            <h:dataTable value="#{threadList.threads.threads}" var="thread" id="threadsTable"
-                         styleClass="table align-middle mb-0 bg-white" headerClass="bg-light">
+            <h:form id="threadsForm">
+                <h:dataTable value="#{threadList.threads.threads}" var="thread" id="threadsTable"
+                             styleClass="table align-middle mb-0 bg-white" headerClass="bg-light">
 
-                <h:column>
-                    <f:facet name="header">#{translation.get('title')}</f:facet>
-                    <h:outputText value="#{thread.title}"/>
-                </h:column>
+                    <h:column>
+                        <f:facet name="header">#{translation.get('title')}</f:facet>
+                        <h:outputText value="#{thread.title}"/>
+                    </h:column>
 
-                <h:column>
-                    <f:facet name="header">#{translation.get('view')}</f:facet>
-                    <h:link outcome="/threads/note_thread_view.xhtml" value="#{translation.get('view')}">
-                        <f:param name="id" value="#{thread.id}"/>
-                    </h:link>
-                </h:column>
+                    <h:column>
+                        <f:facet name="header">#{translation.get('view')}</f:facet>
+                        <h:link outcome="/threads/note_thread_view.xhtml" value="#{translation.get('view')}">
+                            <f:param name="id" value="#{thread.id}"/>
+                        </h:link>
+                    </h:column>
 
-                <h:column rendered="#{facesContext.externalContext.isUserInRole('admin')}">
-                    <f:facet name="header">#{translation.get('delete')}</f:facet>
-                    <h:form>
+                    <h:column rendered="#{facesContext.externalContext.isUserInRole('admin')}">
+                        <f:facet name="header">#{translation.get('delete')}</f:facet>
                         <h:commandButton styleClass="btn" value="#{translation.get('delete')}"
                                          action="#{threadList.deleteAction(thread.id)}">
+                            <f:ajax execute="@this" render="threadsTable"/>
                         </h:commandButton>
-                    </h:form>
-                </h:column>
-            </h:dataTable>
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+
         </article>
     </ui:define>
 
