@@ -2,7 +2,6 @@ package com.example.jee_project.chat.view;
 
 import com.example.jee_project.chat.entity.ChatEvent;
 import com.example.jee_project.chat.entity.ChatMessage;
-import com.example.jee_project.chat.socket.ChatEndpoint;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.enterprise.event.Event;
 import jakarta.faces.context.FacesContext;
@@ -18,21 +17,25 @@ import lombok.Setter;
 public class ChatBean {
 
     @Inject
-    Event<ChatEvent> event;
+    private Event<ChatEvent> event;
 
     private String message;
     private String to;
 
     public void send() {
-        ChatMessage msg = new ChatMessage();
-        msg.setFrom(getUser());
-        msg.setTo((to == null || to.isBlank()) ? null : to.trim());
-        msg.setContent(message);
+        String user = getUser();
+        if (user == null || message == null || message.isBlank()) return;
 
-        ChatEndpoint.broadcastToUser(msg);
+        ChatMessage msg = ChatMessage.builder()
+                .from(user)
+                .content(message)
+                .to((to == null || to.isBlank()) ? null : to.trim())
+                .build();
+
+        event.fire(new ChatEvent(msg));
+
+        message = "";
     }
-
-
 
     private String getUser() {
         return FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();

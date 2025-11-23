@@ -7,60 +7,63 @@
 
     <ui:define name="content">
         <section>
-            <header>
+            <header class="mb-4">
                 <h2>
-                    <h:outputText value="#{translation.get('chat')}"/>
+                    <h:outputText value="#{translation.get('chat')}" />
                 </h2>
             </header>
 
             <div class="container">
-                <div class="row mb-3">
+                <div class="row">
 
-                    <!-- Panel wiadomości - opakowany w formę, żeby AJAX mogło go renderować -->
-                    <h:form id="chatForm">
-
-                        <h:panelGroup id="chatPanel" layout="block" styleClass="col-8">
-                            <div class="card">
-                                <div class="card-header">Wiadomości</div>
-                                <div class="card-body">
-                                    <div id="chatMessages"
-                                         style="height:400px; overflow:auto; white-space:pre-wrap;"></div>
-                                </div>
+                    <!-- Panel wiadomości -->
+                    <div class="col-md-8 mb-3">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h:outputText value="#{translation.get('chat.messages')}" />
                             </div>
-                        </h:panelGroup>
-
-                        <div class="col-4">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h:outputText value="#{translation.get('chat.message.send')}"/>
-                                </div>
-                                <div class="card-body">
-                                    <div class="mb-2">
-                                        <label for="toInput">
-                                            <h:outputText value="#{translation.get('chat.message.to')}"/>
-                                        </label>
-                                        <h:inputText id="toInput"
-                                                     value="#{chatBean.to}"
-                                                     placeholder="#{translation.get('chat.message.toUser', 'Użytkownik (puste = wszyscy)')}"
-                                                     style="width:100%"/>
-                                    </div>
-
-                                    <div class="mb-2">
-                                        <label for="msg">Wiadomość:</label>
-                                        <h:inputTextarea id="msg" value="#{chatBean.message}" rows="4"
-                                                         style="width:100%"/>
-                                    </div>
-
-                                    <div class="d-grid gap-2">
-                                        <h:commandButton value="#{translation.get('chat.message.send')}"
-                                                         action="#{chatBean.send}">
-                                            <f:ajax execute="@form" render="chatPanel"/>
-                                        </h:commandButton>
-                                    </div>
-                                </div>
+                            <div class="card-body p-2" style="height: 400px; overflow-y: auto; white-space: pre-wrap;">
+                                <div id="chatMessages"></div>
                             </div>
                         </div>
-                    </h:form>
+                    </div>
+
+                    <!-- Panel wysyłania wiadomości -->
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h:outputText value="#{translation.get('chat.sendMessage')}" />
+                            </div>
+                            <div class="card-body">
+                                <h:form id="chatForm">
+                                    <div class="mb-2">
+                                        <h:outputLabel for="toInput" value="#{translation.get('chat.to')}" />
+                                        <h:inputText id="toInput"
+                                                     value="#{chatBean.to}"
+                                                     placeholder="#{translation.get('chat.toUserPlaceholder', 'Użytkownik (puste = wszyscy)')}"
+                                                     style="width: 100%;" />
+                                    </div>
+
+                                    <div class="mb-2">
+                                        <h:outputLabel for="msg" value="#{translation.get('chat.message')}" />
+                                        <h:inputTextarea id="msg"
+                                                         value="#{chatBean.message}"
+                                                         rows="4"
+                                                         style="width: 100%;" />
+                                    </div>
+
+                                    <div class="d-grid">
+                                        <h:commandButton value="#{translation.get('chat.send')}"
+                                                         action="#{chatBean.send}"
+                                                         styleClass="btn btn-primary">
+                                            <f:ajax execute="@form"/>
+                                        </h:commandButton>
+                                    </div>
+                                </h:form>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </section>
