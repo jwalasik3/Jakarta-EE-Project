@@ -17,7 +17,14 @@
         <h:outputStylesheet library="webjars" name="mdb-ui-kit/6.4.0/css/mdb.min.css"/>
         <h:outputStylesheet library="default" name="css/main.css"/>
         <h:outputScript library="webjars" name="mdb-ui-kit/6.4.0/js/mdb.min.js"/>
-        <h:outputScript library="mdb" name="js/main.js" target="body"/>
+        <h:outputScript target="head">
+            window.appConfig = {
+            username: "#{request.remoteUser}",
+            contextPath: "#{facesContext.externalContext.requestContextPath}"
+            };
+        </h:outputScript>
+        <h:outputScript library="js" name="main.js" target="body"/>
+
     </h:head>
 
     <h:body>
@@ -45,6 +52,11 @@
                         <li class="nav-item">
                             <h:link styleClass="nav-link" outcome="/threads/note_thread_list.xhtml">
                                 <h:outputText value="#{translation.get('threads')}" />
+                            </h:link>
+                        </li>
+                        <li class="nav-item">
+                            <h:link styleClass="nav-link" outcome="/chat/chat_view.xhtml">
+                                <h:outputText value="#{translation.get('chat')}" />
                             </h:link>
                         </li>
                     </ul>
