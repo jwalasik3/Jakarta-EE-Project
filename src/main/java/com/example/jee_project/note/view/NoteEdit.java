@@ -23,6 +23,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.example.jee_project.logging.annotation.LoggedOperation;
+
 @ViewScoped
 @Named
 public class NoteEdit implements Serializable {
@@ -68,6 +70,7 @@ public class NoteEdit implements Serializable {
         }
     }
 
+    @LoggedOperation
     public String saveAction() {
         service.updateNote(factory.updateNote().apply(service.getNote(id).orElseThrow(), note));
         String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();

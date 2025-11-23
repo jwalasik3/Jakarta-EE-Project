@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@LoggedOperation
 @LocalBean
 @Stateless
 @NoArgsConstructor(force = true)

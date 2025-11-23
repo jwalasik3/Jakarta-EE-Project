@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@LoggedOperation
 @LocalBean
 @Stateless
 @NoArgsConstructor(force = true)
@@ -45,7 +44,6 @@ public class NoteService {
         return repository.find(id);
     }
 
-    @LoggedOperation
     public Optional<Note> getNoteByCallerPrincipal(UUID id) {
 
         Optional<Note> result = repository.find(id);

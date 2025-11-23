@@ -6,12 +6,14 @@ import jakarta.interceptor.AroundInvoke;
 import jakarta.interceptor.Interceptor;
 import jakarta.interceptor.InvocationContext;
 import jakarta.security.enterprise.SecurityContext;
+
+import java.io.Serializable;
 import java.util.logging.Logger;
 
 @Interceptor
 @LoggedOperation
 @Priority(Interceptor.Priority.APPLICATION)
-public class LoggingInterceptor {
+public class LoggingInterceptor implements Serializable {
     private static final Logger logger = Logger.getLogger(LoggingInterceptor.class.getName());
 
     @Inject

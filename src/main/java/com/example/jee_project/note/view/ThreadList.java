@@ -10,6 +10,8 @@ import jakarta.inject.Named;
 
 import java.util.UUID;
 
+import com.example.jee_project.logging.annotation.LoggedOperation;
+
 @RequestScoped
 @Named
 public class ThreadList {
@@ -39,9 +41,10 @@ public class ThreadList {
     /**
      * Action for clicking delete action.
      *
-     * @param thread character to be removed
+     * @param id ID of thread to be removed
      * @return navigation case to list_characters
      */
+    @LoggedOperation
     public String deleteAction(UUID id) {
         service.deleteNoteThread(id);
         return "note_thread_list?faces-redirect=true";

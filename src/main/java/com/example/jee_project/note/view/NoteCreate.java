@@ -1,6 +1,7 @@
 package com.example.jee_project.note.view;
 
 import com.example.jee_project.component.ModelFunctionFactory;
+import com.example.jee_project.logging.annotation.LoggedOperation;
 import com.example.jee_project.note.model.NoteCreateModel;
 import com.example.jee_project.note.model.ThreadModel;
 import com.example.jee_project.note.service.NoteService;
@@ -92,6 +93,7 @@ public class NoteCreate implements Serializable {
         return "/threads/note_thread_list.xhtml?faces-redirect=true";
     }
 
+    @LoggedOperation
     public String saveAction() {
 
         noteService.createNoteByCallerPrincipal(factory.modelToNote().apply(note));

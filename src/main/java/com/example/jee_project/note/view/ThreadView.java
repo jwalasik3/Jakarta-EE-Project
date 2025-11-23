@@ -1,6 +1,7 @@
 package com.example.jee_project.note.view;
 
 import com.example.jee_project.component.ModelFunctionFactory;
+import com.example.jee_project.logging.annotation.LoggedOperation;
 import com.example.jee_project.note.entity.NoteThread;
 import com.example.jee_project.note.model.ThreadModel;
 import com.example.jee_project.note.service.NoteService;
@@ -53,6 +54,7 @@ public class ThreadView implements Serializable {
         }
     }
 
+    @LoggedOperation
     public String deleteAction(UUID id) {
 
         noteService.deleteNote(id);

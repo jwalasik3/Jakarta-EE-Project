@@ -48,6 +48,13 @@
                                         </h:column>
 
                                         <h:column>
+                                            <f:facet name="header">Edit</f:facet>
+                                            <h:link outcome="/notes/note_edit.xhtml" value="Edit">
+                                                <f:param name="id" value="#{note.id}"/>
+                                            </h:link>
+                                        </h:column>
+
+                                        <h:column>
                                             <f:facet name="header">#{translation.get('delete')}</f:facet>
                                             <h:commandButton styleClass="btn" value="#{translation.get('delete')}"
                                                              action="#{threadView.deleteAction(note.id)}">
