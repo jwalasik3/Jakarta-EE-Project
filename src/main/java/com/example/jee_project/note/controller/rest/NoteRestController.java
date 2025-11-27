@@ -12,11 +12,10 @@ import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.EJB;
 import jakarta.ejb.EJBAccessException;
 import jakarta.inject.Inject;
+import jakarta.persistence.OptimisticLockException;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.ws.rs.ForbiddenException;
-import jakarta.ws.rs.NotFoundException;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.WebApplicationException;
+import jakarta.transaction.TransactionalException;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
@@ -90,19 +89,27 @@ public class NoteRestController implements NoteController {
     @Override
     public void patchNote(UUID threadId, UUID noteId, PatchNoteRequest request) {
 
-        service.getNote(noteId).ifPresentOrElse(
-                entity -> {
-                    try {
-                        service.updateNote(factory.updateNote().apply(entity, threadId, request));
-                    } catch (EJBAccessException e) {
-                        log.log(Level.WARNING, e.getMessage(), e);
-                        throw new ForbiddenException();
+        try {
+
+            service.getNote(noteId).ifPresentOrElse(
+                    entity -> {
+                        try {
+                            service.updateNote(factory.updateNote().apply(entity, threadId, request));
+                        } catch (EJBAccessException e) {
+                            log.log(Level.WARNING, e.getMessage(), e);
+                            throw new ForbiddenException();
+                        }
+                    },
+                    () -> {
+                        throw new NotFoundException();
                     }
-                },
-                () -> {
-                    throw new NotFoundException();
-                }
-        );
+            );
+        } catch (TransactionalException ex) {
+
+            if (ex.getCause() instanceof OptimisticLockException) {
+                throw new BadRequestException(ex.getCause());
+            }
+        }
     }
 
     @RolesAllowed({ UserRole.USER, UserRole.ADMIN })

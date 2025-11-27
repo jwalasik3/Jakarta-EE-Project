@@ -18,6 +18,8 @@ public class ThreadToModelFunction implements Function<NoteThread, ThreadModel> 
                 .notes(noteThread.getNotes().stream().map(note -> ThreadModel.Note.builder()
                         .id(note.getId())
                         .title(note.getTitle())
+                        .version(note.getVersion())
+                        .creationDateTime(note.getCreationDateTime())
                         .build()).collect(Collectors.toList())
                 ).build();
     }

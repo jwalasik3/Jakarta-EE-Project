@@ -17,7 +17,7 @@ import java.util.UUID;
 @EqualsAndHashCode
 @Entity
 @Table(name = "notes")
-public class Note implements Serializable {
+public class Note extends VersionAndCreationDateAuditable implements Serializable {
 
     @Id
     private UUID id;

@@ -14,11 +14,7 @@ public class NoteToEditModelFunction implements Function<Note, NoteEditModel> {
         return NoteEditModel.builder()
                 .title(note.getTitle())
                 .content(note.getContent())
-                .thread(ThreadModel.builder()
-                        .id(note.getNoteThread().getId())
-                        .importance(note.getNoteThread().getImportance())
-                        .title(note.getNoteThread().getTitle())
-                        .build())
+                .version(note.getVersion())
                 .build();
     }
 }

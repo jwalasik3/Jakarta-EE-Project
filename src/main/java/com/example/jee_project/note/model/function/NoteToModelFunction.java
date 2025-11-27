@@ -14,6 +14,8 @@ public class NoteToModelFunction implements Function<Note, NoteModel> {
                 .id(note.getId())
                 .title(note.getTitle())
                 .content(note.getContent())
+                .version(note.getVersion())
+                .creationDateTime(note.getCreationDateTime())
                 .build();
     }
 }

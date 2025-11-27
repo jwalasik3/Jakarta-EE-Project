@@ -14,6 +14,7 @@ public class NoteToResponseFunction implements Function<Note, GetNoteResponse> {
                 .id(note.getId())
                 .title(note.getTitle())
                 .content(note.getContent())
+                .version(note.getVersion())
                 .build();
     }
 }

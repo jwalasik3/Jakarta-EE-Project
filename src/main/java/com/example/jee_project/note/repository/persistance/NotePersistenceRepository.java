@@ -1,10 +1,16 @@
 package com.example.jee_project.note.repository.persistance;
 
 import com.example.jee_project.note.entity.Note;
+import com.example.jee_project.note.entity.NoteThread_;
+import com.example.jee_project.note.entity.Note_;
 import com.example.jee_project.note.repository.api.NoteRepository;
+import com.example.jee_project.user.entity.User_;
 import jakarta.enterprise.context.Dependent;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,30 +28,41 @@ public class NotePersistenceRepository implements NoteRepository {
 
     @Override
     public List<Note> findAll() {
-
-        return em.createQuery("select n from Note n", Note.class).getResultList();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Note> query = cb.createQuery(Note.class);
+        Root<Note> root = query.from(Note.class);
+        query.select(root);
+        return em.createQuery(query).getResultList();
     }
 
     @Override
     public List<Note> findAll(UUID userId) {
 
-        return em.createQuery("SELECT n FROM Note n WHERE n.user.id = :userId", Note.class)
-                .setParameter("userId", userId).getResultList();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Note> query = cb.createQuery(Note.class);
+        Root<Note> root = query.from(Note.class);
+        query.select(root).where(cb.equal(root.get(Note_.user).get(User_.id), userId));
+        return em.createQuery(query).getResultList();
     }
 
     @Override
     public List<Note> findAllByThread(UUID threadId) {
 
-        return em.createQuery("SELECT n FROM Note n WHERE n.noteThread.id = :threadId", Note.class)
-                .setParameter("threadId", threadId)
-                .getResultList();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Note> query = cb.createQuery(Note.class);
+        Root<Note> root = query.from(Note.class);
+        query.select(root).where(cb.equal(root.get(Note_.noteThread).get(NoteThread_.id), threadId));
+        return em.createQuery(query).getResultList();
     }
 
     @Override
     public List<Note> findAllByUsername(String username) {
-        return em.createQuery("SELECT n FROM Note n WHERE n.user.login = :username", Note.class)
-                .setParameter("username", username)
-                .getResultList();
+
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Note> query = cb.createQuery(Note.class);
+        Root<Note> root = query.from(Note.class);
+        query.select(root).where(cb.equal(root.get(Note_.user).get(User_.login), username));
+        return em.createQuery(query).getResultList();
     }
 
     @Override
@@ -56,19 +73,37 @@ public class NotePersistenceRepository implements NoteRepository {
 
     @Override
     public void create(Note entity) {
+
+        if (!em.isJoinedToTransaction()) {
+            em.joinTransaction();
+        }
         em.persist(entity);
-        em.flush();
-        System.out.println("[NotePersistenceRepository.create] persisted note id=" + entity.getId() + ", threadId now=" + (entity.getNoteThread() == null ? null : entity.getNoteThread().getId()));
     }
 
     @Override
     public void delete(UUID id) {
-        em.remove(em.find(Note.class, id));
+
+        if (!em.isJoinedToTransaction()) {
+            em.joinTransaction();
+        }
+        Note toRemove = em.find(Note.class, id);
+        if (toRemove != null) {
+            em.remove(toRemove);
+        }
     }
+
+    @Override
+    public void detach(Note entity) {
+        em.detach(entity);
+    }
+
 
     @Override
     public void update(Note entity) {
 
+        if (!em.isJoinedToTransaction()) {
+            em.joinTransaction();
+        }
         em.merge(entity);
     }
 }

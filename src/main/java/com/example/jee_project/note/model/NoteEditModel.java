@@ -1,7 +1,5 @@
 package com.example.jee_project.note.model;
 
-import com.example.jee_project.note.entity.NoteThread;
-import com.example.jee_project.user.entity.User;
 import lombok.*;
 
 @Getter
@@ -16,5 +14,5 @@ public class NoteEditModel {
 
     private String title;
     private String content;
-    private ThreadModel thread;
+    private Long version;
 }

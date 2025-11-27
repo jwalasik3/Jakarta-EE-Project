@@ -41,6 +41,19 @@
                                         </h:column>
 
                                         <h:column>
+                                            <f:facet name="header">#{translation.get('version')}</f:facet>
+                                            <h:outputText value="#{note.version}" />
+                                        </h:column>
+
+                                        <h:column>
+                                            <f:facet name="header">#{translation.get('creationDateTime')}</f:facet>
+                                            <h:outputText value="#{note.creationDateTime}">
+                                            <f:convertDateTime type="localDateTime"
+                                                               pattern="yyyy-MM-dd HH:mm" />
+                                            </h:outputText>
+                                        </h:column>
+
+                                        <h:column>
                                             <f:facet name="header">#{translation.get('view')}</f:facet>
                                             <h:link outcome="/notes/note_view.xhtml" value="#{translation.get('view')}">
                                                 <f:param name="id" value="#{note.id}"/>
@@ -48,8 +61,8 @@
                                         </h:column>
 
                                         <h:column>
-                                            <f:facet name="header">Edit</f:facet>
-                                            <h:link outcome="/notes/note_edit.xhtml" value="Edit">
+                                            <f:facet name="header">#{translation.get('edit')}</f:facet>
+                                            <h:link outcome="/notes/note_edit.xhtml" value="#{translation.get('edit')}">
                                                 <f:param name="id" value="#{note.id}"/>
                                             </h:link>
                                         </h:column>

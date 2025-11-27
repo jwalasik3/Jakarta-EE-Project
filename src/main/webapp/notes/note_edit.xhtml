@@ -13,7 +13,14 @@
     <ui:define name="content">
         <article>
             <header><h2>Edit note info</h2></header>
-            <h:form styleClass="container" onreset="onReset()" enctype="multipart/form-data">
+            <h:form styleClass="container" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-4 p-2">
+                        <h:messages/>
+                    </div>
+                </div>
+
+                <h:inputHidden value="#{noteEdit.note.version}" />
                 <div class="row">
                     <div class="col-4 p-2">
                         <div class="form-outline">
@@ -28,18 +35,6 @@
                         <div class="form-outline">
                             <h:inputText id="content" value="#{noteEdit.note.content}" styleClass="form-control"/>
                             <h:outputLabel for="content" value="Content:" styleClass="form-label"/>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-4 p-2">
-                        <div class="form-outline">
-                            <h:selectOneMenu value="#{noteEdit.note.thread}" converter="noteThreadConverter" styleClass="form-control">
-                                <f:selectItems value="#{noteEdit.threads}" var="thread"
-                                               itemValue="#{thread}" itemLabel="#{thread.title}" />
-                            </h:selectOneMenu>
-                            <h:outputLabel value="Note thread:" styleClass="form-label"/>
                         </div>
                     </div>
                 </div>

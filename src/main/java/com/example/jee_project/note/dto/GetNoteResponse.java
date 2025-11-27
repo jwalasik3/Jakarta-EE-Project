@@ -14,4 +14,5 @@ public class GetNoteResponse {
     private UUID id;
     private String title;
     private String content;
+    private Long version;
 }

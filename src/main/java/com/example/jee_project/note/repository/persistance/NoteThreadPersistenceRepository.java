@@ -1,10 +1,17 @@
 package com.example.jee_project.note.repository.persistance;
 
+import com.example.jee_project.note.entity.Note;
 import com.example.jee_project.note.entity.NoteThread;
+import com.example.jee_project.note.entity.NoteThread_;
+import com.example.jee_project.note.entity.Note_;
 import com.example.jee_project.note.repository.api.NoteThreadRepository;
 import jakarta.enterprise.context.Dependent;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaDelete;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,30 +37,51 @@ public class NoteThreadPersistenceRepository implements NoteThreadRepository {
     @Override
     public List<NoteThread> findAll() {
 
-        return em.createQuery("SELECT t FROM NoteThread t", NoteThread.class).getResultList();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<NoteThread> query = cb.createQuery(NoteThread.class);
+        Root<NoteThread> root = query.from(NoteThread.class);
+        query.select(root);
+        return em.createQuery(query).getResultList();
     }
 
     @Override
     public void create(NoteThread entity) {
 
+        if (!em.isJoinedToTransaction()) {
+            em.joinTransaction();
+        }
         em.persist(entity);
     }
 
     @Override
     public void delete(UUID id) {
-        em.createQuery("DELETE FROM Note n WHERE n.noteThread.id = :id")
-                .setParameter("id", id)
-                .executeUpdate();
 
-        NoteThread thread = em.find(NoteThread.class, id);
-        if (thread != null) {
-            em.remove(thread);
+        if (!em.isJoinedToTransaction()) {
+            em.joinTransaction();
         }
+
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaDelete<Note> noteDelete = cb.createCriteriaDelete(Note.class);
+        Root<Note> noteRoot = noteDelete.from(Note.class);
+        noteDelete.where(cb.equal(noteRoot.get(Note_.noteThread).get(NoteThread_.id), id));
+
+        CriteriaDelete<NoteThread> threadDelete = cb.createCriteriaDelete(NoteThread.class);
+        Root<NoteThread> threadRoot = threadDelete.from(NoteThread.class);
+        threadDelete.where(cb.equal(threadRoot.get(NoteThread_.id), id));
     }
 
     @Override
     public void update(NoteThread entity) {
 
+        if (!em.isJoinedToTransaction()) {
+            em.joinTransaction();
+        }
         em.merge(entity);
+    }
+
+    @Override
+    public void detach(NoteThread entity) {
+
+        em.detach(entity);
     }
 }

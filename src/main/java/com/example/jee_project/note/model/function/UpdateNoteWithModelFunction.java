@@ -17,11 +17,10 @@ public class UpdateNoteWithModelFunction implements BiFunction<Note, NoteEditMod
                 .id(entity.getId())
                 .title(request.getTitle())
                 .content(request.getContent())
-                .noteThread(NoteThread.builder()
-                        .id(request.getThread().getId())
-                        .title(request.getThread().getTitle())
-                        .importance(request.getThread().getImportance())
-                        .build())
+                .noteThread(entity.getNoteThread())
+                .version(request.getVersion())
+                .creationDateTime(entity.getCreationDateTime())
+                .lastModifiedDateTime(entity.getLastModifiedDateTime())
                 .user(entity.getUser())
                 .build();
     }

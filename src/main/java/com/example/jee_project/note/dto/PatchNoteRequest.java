@@ -13,4 +13,5 @@ public class PatchNoteRequest {
     private String title;
     private String content;
     private NoteThread noteThread;
+    private Long version;
 }

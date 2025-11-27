@@ -13,4 +13,5 @@ public class PutNoteRequest {
     private String title;
     private String content;
     private User user;
+    private Long version;
 }

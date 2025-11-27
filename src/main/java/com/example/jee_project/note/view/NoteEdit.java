@@ -1,17 +1,19 @@
 package com.example.jee_project.note.view;
 
 import com.example.jee_project.component.ModelFunctionFactory;
+import com.example.jee_project.logging.annotation.LoggedOperation;
 import com.example.jee_project.note.entity.Note;
-import com.example.jee_project.note.entity.NoteThread;
 import com.example.jee_project.note.model.NoteEditModel;
 import com.example.jee_project.note.model.ThreadModel;
 import com.example.jee_project.note.service.NoteService;
 import com.example.jee_project.note.service.NoteThreadService;
 import jakarta.ejb.EJB;
+import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import jakarta.persistence.OptimisticLockException;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,16 +25,14 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import com.example.jee_project.logging.annotation.LoggedOperation;
-
 @ViewScoped
 @Named
 public class NoteEdit implements Serializable {
 
+    private final ModelFunctionFactory factory;
+    private final FacesContext facesContext;
     private NoteService service;
     private NoteThreadService threadService;
-    private final ModelFunctionFactory factory;
-
     @Setter
     @Getter
     private UUID id;
@@ -44,7 +44,8 @@ public class NoteEdit implements Serializable {
     private List<ThreadModel> threads;
 
     @Inject
-    public NoteEdit(ModelFunctionFactory factory) {
+    public NoteEdit(ModelFunctionFactory factory, FacesContext facesContext) {
+        this.facesContext = facesContext;
         this.factory = factory;
     }
 
@@ -59,22 +60,31 @@ public class NoteEdit implements Serializable {
     }
 
     public void init() throws IOException {
-        System.out.println("Wywołano init(), id: " + id);
+
         Optional<Note> note = service.getNoteByCallerPrincipal(id);
         if (note.isPresent()) {
             this.note = factory.noteToEditModel().apply(note.get());
             threads = threadService.getNoteThreads().stream().map(factory.threadToModel()).collect(Collectors.toList());
-            System.out.println("Liczba wątków: " + threads.size());
         } else {
             FacesContext.getCurrentInstance().getExternalContext().responseSendError(HttpServletResponse.SC_NOT_FOUND, "Note not found");
         }
     }
 
     @LoggedOperation
-    public String saveAction() {
-        service.updateNote(factory.updateNote().apply(service.getNote(id).orElseThrow(), note));
-        String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
-        return viewId + "?faces-redirect=true&includeViewParams=true";
-    }
+    public String saveAction() throws IOException {
 
+        try {
+            service.updateNote(factory.updateNote().apply(service.getNote(id).orElseThrow(), note));
+            String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
+            return viewId + "?faces-redirect=true&includeViewParams=true";
+        } catch (Exception ex) {
+            System.out.println(ex.getCause() + ex.getMessage());
+            if (ex.getCause() instanceof OptimisticLockException) {
+                init();
+                facesContext.addMessage(null, new FacesMessage("Version collision."));
+            }
+            return null;
+        }
+    }
 }
+

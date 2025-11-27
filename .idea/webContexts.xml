@@ -4,6 +4,7 @@
     <option name="state">
       <map>
         <entry key="file://$PROJECT_DIR$/src/main/webapp/chat/chat_view.xhtml" value="file://$PROJECT_DIR$/src/main/webapp/chat" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/notes/note_view.xhtml" value="file://$PROJECT_DIR$/src/main/webapp/notes" />
       </map>
     </option>
   </component>

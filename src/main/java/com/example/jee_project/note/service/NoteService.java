@@ -5,6 +5,7 @@ import com.example.jee_project.note.entity.Note;
 import com.example.jee_project.note.entity.NoteThread;
 import com.example.jee_project.note.repository.api.NoteRepository;
 import com.example.jee_project.note.repository.api.NoteThreadRepository;
+import com.example.jee_project.note.repository.persistance.NotePersistenceRepository;
 import com.example.jee_project.user.entity.User;
 import com.example.jee_project.user.entity.UserRole;
 import com.example.jee_project.user.repository.api.UserRepository;
@@ -15,6 +16,7 @@ import jakarta.inject.Inject;
 import jakarta.security.enterprise.SecurityContext;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -28,15 +30,17 @@ public class NoteService {
     private final UserRepository userRepository;
     private final NoteThreadRepository threadRepository;
     private final SecurityContext securityContext;
+    private NotePersistenceRepository notePersistenceRepository;
 
     @Inject
     public NoteService(NoteRepository repository, UserRepository userRepository,
-                       NoteThreadRepository threadRepository, SecurityContext securityContext) {
+                       NoteThreadRepository threadRepository, SecurityContext securityContext, NotePersistenceRepository notePersistenceRepository) {
 
         this.repository = repository;
         this.userRepository = userRepository;
         this.threadRepository = threadRepository;
         this.securityContext = securityContext;
+        this.notePersistenceRepository = notePersistenceRepository;
     }
 
     public Optional<Note> getNote(UUID id) {
@@ -120,36 +124,11 @@ public class NoteService {
 
     public void updateNote(Note note) {
         Note existing = repository.find(note.getId())
-                .orElseThrow(() -> new IllegalArgumentException("Note with id " + note.getId() + " does not exist"));
+                .orElseThrow(IllegalStateException::new);
 
         checkAdminRoleOrOwner(repository.find(note.getId()));
-
-        UUID oldThreadId = existing.getNoteThread() != null ? existing.getNoteThread().getId() : null;
-        UUID newThreadId = note.getNoteThread() != null ? note.getNoteThread().getId() : null;
-
-        if (newThreadId == null) {
-            throw new IllegalArgumentException("NoteThread id must be provided");
-        }
-
-        if (oldThreadId != null && !oldThreadId.equals(newThreadId)) {
-            NoteThread oldThread = threadRepository.find(oldThreadId).orElse(null);
-            if (oldThread != null) {
-                oldThread.removeNote(existing);
-            }
-
-            NoteThread newThread = threadRepository.find(newThreadId)
-                    .orElseThrow(() -> new IllegalArgumentException("NoteThread with id " + newThreadId + " does not exist"));
-            existing.setNoteThread(newThread);
-            newThread.addNote(existing);
-        } else {
-            NoteThread managedThread = threadRepository.find(newThreadId)
-                    .orElseThrow(() -> new IllegalArgumentException("NoteThread with id " + newThreadId + " does not exist"));
-            existing.setNoteThread(managedThread);
-        }
-
-        existing.setTitle(note.getTitle());
-        existing.setContent(note.getContent());
-        existing.setUser(note.getUser());
+        repository.detach(existing);
+        repository.update(note);
     }
 
     public void deleteNote(UUID id) {

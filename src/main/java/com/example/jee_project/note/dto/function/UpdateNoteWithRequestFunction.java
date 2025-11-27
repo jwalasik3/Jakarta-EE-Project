@@ -16,6 +16,8 @@ public class UpdateNoteWithRequestFunction {
                 .content(request.getContent() != null ? request.getContent() : entity.getContent())
                 .user(entity.getUser())
                 .noteThread(NoteThread.builder().id(threadId).build())
+                .version(entity.getVersion())
+                .creationDateTime(entity.getCreationDateTime())
                 .build();
     }
 }

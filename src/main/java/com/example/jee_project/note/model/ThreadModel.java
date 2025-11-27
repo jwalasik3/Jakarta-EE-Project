@@ -3,6 +3,7 @@ package com.example.jee_project.note.model;
 import com.example.jee_project.note.entity.Importance;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,7 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class ThreadModel {
 
     @Getter
@@ -21,12 +22,16 @@ public class ThreadModel {
     @NoArgsConstructor
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @ToString
-    @EqualsAndHashCode
+    @EqualsAndHashCode(onlyExplicitlyIncluded = true)
     public static class Note {
+        @EqualsAndHashCode.Include
         private UUID id;
         private String title;
+        private Long version;
+        private LocalDateTime creationDateTime;
     }
 
+    @EqualsAndHashCode.Include
     private UUID id;
     private String title;
     private Importance importance;

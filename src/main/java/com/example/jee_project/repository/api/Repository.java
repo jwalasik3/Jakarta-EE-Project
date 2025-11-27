@@ -48,4 +48,6 @@ public interface Repository<E, K> {
      * @param entity object to be updated
      */
     void update(E entity);
+
+    void detach(E entity);
 }
