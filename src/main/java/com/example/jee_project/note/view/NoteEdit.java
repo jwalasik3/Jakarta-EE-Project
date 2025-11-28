@@ -9,7 +9,9 @@ import com.example.jee_project.note.service.NoteService;
 import com.example.jee_project.note.service.NoteThreadService;
 import jakarta.ejb.EJB;
 import jakarta.faces.application.FacesMessage;
+import jakarta.faces.component.UIComponent;
 import jakarta.faces.context.FacesContext;
+import jakarta.faces.event.AjaxBehaviorEvent;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -20,9 +22,7 @@ import lombok.Setter;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @ViewScoped
@@ -42,6 +42,8 @@ public class NoteEdit implements Serializable {
 
     @Getter
     private List<ThreadModel> threads;
+
+    private Set<String> changedFields = new HashSet<>();
 
     @Inject
     public NoteEdit(ModelFunctionFactory factory, FacesContext facesContext) {
@@ -72,18 +74,53 @@ public class NoteEdit implements Serializable {
 
     @LoggedOperation
     public String saveAction() throws IOException {
-
         try {
-            service.updateNote(factory.updateNote().apply(service.getNote(id).orElseThrow(), note));
+            // Build entity from submitted model and update
+            service.updateNote(factory.updateNote().apply(
+                    service.getNote(id).orElseThrow(), note
+            ));
+
+            // successful save -> clear tracked fields
+            changedFields.clear();
+
             String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
             return viewId + "?faces-redirect=true&includeViewParams=true";
+
         } catch (Exception ex) {
-            System.out.println(ex.getCause() + ex.getMessage());
-            if (ex.getCause() instanceof OptimisticLockException) {
-                init();
-                facesContext.addMessage(null, new FacesMessage("Version collision."));
+            if (ex.getCause() instanceof OptimisticLockException
+                    || ex instanceof OptimisticLockException) {
+
+                Note latest = service.getNote(id).orElseThrow();
+
+                if (!changedFields.contains("title")) {
+                    note.setTitle(latest.getTitle());
+                }
+                if (!changedFields.contains("content")) {
+                    note.setContent(latest.getContent());
+                }
+
+                note.setVersion(latest.getVersion());
+
+                facesContext.addMessage(null, new FacesMessage(
+                        FacesMessage.SEVERITY_WARN,
+                        "Version collision",
+                        "The note was updated elsewhere. Untouched fields were refreshed."
+                ));
+
+                return null;
             }
-            return null;
+
+            throw new RuntimeException(ex);
+        }
+    }
+
+    public void onFieldChanged(AjaxBehaviorEvent event) {
+        UIComponent comp = event.getComponent();
+        Object attr = comp.getAttributes().get("fieldName");
+        if (attr != null) {
+            changedFields.add(attr.toString());
+        } else {
+            changedFields.add(comp.getId());
         }
     }
 }

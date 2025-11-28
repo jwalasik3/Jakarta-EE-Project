@@ -24,8 +24,12 @@
                 <div class="row">
                     <div class="col-4 p-2">
                         <div class="form-outline">
-                            <h:inputText id="title" value="#{noteEdit.note.title}" styleClass="form-control"/>
-                            <h:outputLabel for="title" value="Title:" styleClass="form-label"/>
+                            <h:inputText id="title" value="#{noteEdit.note.title}" styleClass="form-control">
+                                <f:ajax event="blur" listener="#{noteEdit.onFieldChanged}" execute="@this" render="@this">
+                                    <f:attribute name="fieldName" value="title"/>
+                                </f:ajax>
+                                <h:outputLabel for="title" value="Title:" styleClass="form-label"/>
+                            </h:inputText>
                         </div>
                     </div>
                 </div>
@@ -33,8 +37,12 @@
                 <div class="row">
                     <div class="col-4 p-2">
                         <div class="form-outline">
-                            <h:inputText id="content" value="#{noteEdit.note.content}" styleClass="form-control"/>
-                            <h:outputLabel for="content" value="Content:" styleClass="form-label"/>
+                            <h:inputText id="content" value="#{noteEdit.note.content}" styleClass="form-control">
+                                <f:ajax event="blur" listener="#{noteEdit.onFieldChanged}" execute="@this" render="@this">
+                                    <f:attribute name="fieldName" value="content"/>
+                                </f:ajax>
+                                <h:outputLabel for="content" value="Content:" styleClass="form-label"/>
+                            </h:inputText>
                         </div>
                     </div>
                 </div>
