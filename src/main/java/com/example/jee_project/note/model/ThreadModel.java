@@ -28,6 +28,7 @@ public class ThreadModel {
         private UUID id;
         private String title;
         private Long version;
+        private LocalDateTime modificationDateTime;
         private LocalDateTime creationDateTime;
     }
 

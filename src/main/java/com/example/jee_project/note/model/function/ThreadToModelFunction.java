@@ -20,6 +20,7 @@ public class ThreadToModelFunction implements Function<NoteThread, ThreadModel> 
                         .title(note.getTitle())
                         .version(note.getVersion())
                         .creationDateTime(note.getCreationDateTime())
+                        .modificationDateTime(note.getModificationDateTime())
                         .build()).collect(Collectors.toList())
                 ).build();
     }

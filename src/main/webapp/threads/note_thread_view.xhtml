@@ -54,6 +54,14 @@
                                         </h:column>
 
                                         <h:column>
+                                            <f:facet name="header">#{translation.get('modificationDateTime')}</f:facet>
+                                            <h:outputText value="#{note.modificationDateTime}">
+                                                <f:convertDateTime type="localDateTime"
+                                                                   pattern="yyyy-MM-dd HH:mm" />
+                                            </h:outputText>
+                                        </h:column>
+
+                                        <h:column>
                                             <f:facet name="header">#{translation.get('view')}</f:facet>
                                             <h:link outcome="/notes/note_view.xhtml" value="#{translation.get('view')}">
                                                 <f:param name="id" value="#{note.id}"/>

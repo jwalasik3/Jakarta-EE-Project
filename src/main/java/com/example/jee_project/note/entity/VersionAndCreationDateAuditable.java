@@ -26,11 +26,11 @@ public class VersionAndCreationDateAuditable {
     private LocalDateTime creationDateTime;
 
     @Column(name = "last_modified_date_time")
-    private LocalDateTime lastModifiedDateTime;
+    private LocalDateTime modificationDateTime;
 
     @PrePersist
     public void updateCreationDateTime() {
         creationDateTime = LocalDateTime.now();
-        lastModifiedDateTime = LocalDateTime.now();
+        modificationDateTime = LocalDateTime.now();
     }
 }

@@ -1,10 +1,10 @@
 package com.example.jee_project.note.model.function;
 
 import com.example.jee_project.note.entity.Note;
-import com.example.jee_project.note.entity.NoteThread;
 import com.example.jee_project.note.model.NoteEditModel;
 import lombok.SneakyThrows;
 
+import java.time.LocalDateTime;
 import java.util.function.BiFunction;
 
 public class UpdateNoteWithModelFunction implements BiFunction<Note, NoteEditModel, Note> {
@@ -20,7 +20,7 @@ public class UpdateNoteWithModelFunction implements BiFunction<Note, NoteEditMod
                 .noteThread(entity.getNoteThread())
                 .version(request.getVersion())
                 .creationDateTime(entity.getCreationDateTime())
-                .lastModifiedDateTime(entity.getLastModifiedDateTime())
+                .modificationDateTime(LocalDateTime.now())
                 .user(entity.getUser())
                 .build();
     }
